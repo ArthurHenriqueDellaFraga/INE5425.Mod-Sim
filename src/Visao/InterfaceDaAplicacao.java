@@ -25,10 +25,10 @@ public class InterfaceDaAplicacao extends Comunicador{
 	
 	public int iniciar(){
 		String mensagemInicializacao = "UNIVERSIDADE FEDERAL DE SANTA CATARINA"
-				+ "\n" + "INTELIGÊNCIA ARTIFICIAL"
+				+ "\n" + "MODELAGEM & SIMULAÇÃO"
 				+ "\n\n" + "Arthur Henrique Della Fraga \t 11200623"
-				+ "\n" + "Nathan Molinari \t 13100769";
+				+ "\n" + "Felipe Calistro Chaiben \t 11200632";
 		
-		return apresentarDialogoOpitativo(mensagemInicializacao, "TRABALHO 1 • METODOS DE BUSCA", new String[]{"Humano vs Humano", "Humano vs Maquina"});
+		return apresentarDialogoOpitativo(mensagemInicializacao, "TRABALHO 1 • TRANSPORTADORA", new String[]{"Iniciar"});
 	}
 }

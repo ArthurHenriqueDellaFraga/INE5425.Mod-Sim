@@ -20,22 +20,24 @@ public class GerenteDaAplicacao{
 		return INSTANCIA;
 	}
 	
+	//MAIN
+	
+	public static void main(String[] args){
+		GerenteDaAplicacao.invocarInstancia().iniciar();
+	}
+	
 	//FUNCOES
 
 	public void iniciar(){
-		Transportadora transportadora;
+		Transportadora transportadora =  new Transportadora();;
 		
 		try{
 			INTERFACE_DA_APLICACAO.iniciar();
-			switch(1){							
-				case 0:		transportadora = new Transportadora(); break;
-				
-				default:	transportadora = new Transportadora(
-							);
-			}
 		}
 		catch(OperacaoCanceladaException e){
 			System.exit(0);
 		}
+		
+		transportadora.simular();
 	}
 }
