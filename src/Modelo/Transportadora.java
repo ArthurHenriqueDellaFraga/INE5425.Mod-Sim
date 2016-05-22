@@ -9,45 +9,37 @@ public class Transportadora extends Simulacao{
 	public Transportadora(){
 		super();
 		
-		this.percurso = new ArrayList<Recurso>(){{
-			Recurso carregamento = new Recurso(2){
+		this.percurso = new ArrayList<Recurso>();
+			Recurso carregamento = new Recurso("Carregador", 2){
 				public int tempoDeServico() {
 					return 5;
 				}
 			};
-			
-			Recurso pesagem = new Recurso(1) {
+			Recurso pesagem = new Recurso("Balança", 1) {
 				public int tempoDeServico() {
 					return 3;
 				}
 
 			};
-			
-			Recurso entrega = new Recurso() {
+			Recurso entrega = new Recurso("Estrada") {
 				public int tempoDeServico() {
 					return 10;
 				}
 			};
-			
-			linhaDoTempo.adicionarCaptador(carregamento);
-			linhaDoTempo.adicionarCaptador(pesagem);
-			linhaDoTempo.adicionarCaptador(entrega);
-			
-			add(carregamento);
-			add(pesagem);
-			add(entrega);
-		}};
 		
-		this.frota = new ArrayList<Caminhao>(){{
+			this.percurso.add(carregamento);
+			this.percurso.add(pesagem);
+			this.percurso.add(entrega);
+		
+		
+		this.frota = new ArrayList<Caminhao>();
 			Caminhao caminhao1 = new Caminhao(percurso);
 			Caminhao caminhao2 = new Caminhao(percurso);
 			
-			linhaDoTempo.adicionarCaptador(caminhao1);
-			linhaDoTempo.adicionarCaptador(caminhao2);
-			
-			add(caminhao1);
-			add(caminhao2);
-		}};
+			this.frota.add(caminhao1);
+			this.frota.add(caminhao2);
+
+
 	}
 	
 	//FUNCOES
@@ -58,8 +50,20 @@ public class Transportadora extends Simulacao{
 		}
 		
 		for(Recurso recurso : percurso){
-			System.out.println(recurso.toString() + "\n\n");
+			System.out.println(linhaDoTempo.toString(recurso) + "\n\n");
 		}
+	}
+
+	//ABSTRACT
+	
+	public void prosseguir(){
+		for(Caminhao caminhao : frota){
+			caminhao.captar(momento);
+		}
+		
+		for(Recurso recurso : percurso){
+			recurso.captar(momento);
+		}		
 	}
 	
 	

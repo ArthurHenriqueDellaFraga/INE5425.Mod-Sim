@@ -3,10 +3,7 @@ package Modelo;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import PadraoDeProjeto.Captador;
-import Primitivo.Momento;
-
-public abstract class Cliente extends Captador<Momento>{
+public abstract class Cliente extends Temporal{
 	public static int quantidade = 0;
 	public final int id = quantidade++;
 	

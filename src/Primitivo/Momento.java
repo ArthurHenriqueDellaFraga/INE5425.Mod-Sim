@@ -2,8 +2,10 @@ package Primitivo;
 
 import java.util.ArrayList;
 
+import Modelo.Recurso;
+
 public class Momento{
-	public static int numInstancias = -1;
+	public static int numInstancias = 0;
 	public int referenciaTemporal = numInstancias++;
 	
 	private ArrayList<Ocorrencia> ListaDeOcorrencia = new ArrayList<Ocorrencia>();
@@ -16,12 +18,12 @@ public class Momento{
 		ListaDeOcorrencia.add(o);
 	}
 	
-	public String toString(int recursoId){
-		String string = "";
+	public String toString(Recurso recurso){
+		String string = referenciaTemporal + "\n";
 		
 		for(Ocorrencia ocorrencia : ListaDeOcorrencia){
-			if(ocorrencia.recursoId == recursoId){
-				string += referenciaTemporal + " : " + ocorrencia.toString() + "\n";
+			if(ocorrencia.recurso.nome == recurso.nome){
+				string += "    : " + ocorrencia.toString() + "\n";
 			}
 		}
 		

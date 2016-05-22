@@ -2,25 +2,24 @@ package Modelo;
 
 import java.util.ArrayList;
 
-import PadraoDeProjeto.Captador;
-import Primitivo.LinhaDoTempo;
-import Primitivo.Momento;
 import Primitivo.Ocorrencia;
 import Primitivo.Ocorrencia.Evento;
 
-public abstract class Recurso extends Captador<Momento>{
+public abstract class Recurso extends Temporal{
 	public static int quantidade = 0;
 	public final int id = quantidade++;
+	public final String nome;
 	
 	private int capacidade = 0;
 	private ArrayList<Cliente> filaDeEspera = new ArrayList<Cliente>();
 	private ArrayList<Servico> listaDeServicosEmAndamento = new ArrayList<Servico>();
 	
-	private ExtratoDeFuncionamento extratoDeFuncionamento = new ExtratoDeFuncionamento();
+	public Recurso(String nome){
+		this.nome = nome;
+	}
 	
-	public Recurso() { }
-	
-	public Recurso(int capacidade){
+	public Recurso(String nome, int capacidade){
+		this.nome = nome;
 		this.capacidade = capacidade;
 	}
 	
@@ -39,7 +38,7 @@ public abstract class Recurso extends Captador<Momento>{
 	
 	//ABSTRACT
 	
-	public void captar(Momento momento){		
+	public void prosseguir(){		
 		for(int i = 0; i < listaDeServicosEmAndamento.size(); i++){
 			Servico servico = listaDeServicosEmAndamento.get(i);
 			
@@ -60,10 +59,6 @@ public abstract class Recurso extends Captador<Momento>{
 	
 	public abstract int tempoDeServico();
 	
-	public String toString(){
-		return extratoDeFuncionamento.toString();
-	}
-	
 	//SUBCLASSES
 	
 	public class Servico{
@@ -74,7 +69,7 @@ public abstract class Recurso extends Captador<Momento>{
 			this.periodoRestante = tempoDeServico;
 			this.cliente = cliente;
 			
-			extratoDeFuncionamento.registrar(new Ocorrencia(cliente.id, Evento.InicioDoAtendimento, id));
+			registrar(new Ocorrencia(cliente, Evento.InicioDoAtendimento, Recurso.this));
 		}
 		
 		public void prosseguir(){
@@ -84,29 +79,11 @@ public abstract class Recurso extends Captador<Momento>{
 				cliente.prosseguir();
 				listaDeServicosEmAndamento.remove(cliente);
 				
-				extratoDeFuncionamento.registrar(new Ocorrencia(cliente.id, Evento.FimDoAtendimento, id));
+				registrar(new Ocorrencia(cliente, Evento.FimDoAtendimento, Recurso.this));
 				throw new ServicoConcluidoException();
 			}
 		}
 		
 		public class ServicoConcluidoException extends RuntimeException{ }
-	}
-	
-	public class ExtratoDeFuncionamento {
-		
-		public ExtratoDeFuncionamento(){ }
-		
-		//FUNCOES
-		
-		public void registrar(Ocorrencia registro){
-			LinhaDoTempo.invocarInstancia().registrar(registro);
-		}
-		
-		//ABSTRACT
-		
-		public String toString(){
-			return LinhaDoTempo.invocarInstancia().toString(id);
-		}
-		
 	}
 }

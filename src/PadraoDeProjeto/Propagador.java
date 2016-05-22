@@ -5,17 +5,15 @@ import java.util.HashSet;
 public class Propagador<T> {
     private final HashSet<Captador<T>> ConjuntoDeCaopadores =  new HashSet<Captador<T>>();
  
-    public Propagador(){
-    	
-    }
+    public Propagador(){ }
     
     //FUNCOES
     
-    public void adicionarCaptador(Captador<T> captador) {
+    public void inscrever(Captador<T> captador){
     	ConjuntoDeCaopadores.add(captador);
     }
  
-    public void removerCaptador(Captador<T> captador) {
+    public void desinscrever(Captador<T> captador){
     	ConjuntoDeCaopadores.remove(captador);
     }
  

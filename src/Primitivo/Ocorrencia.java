@@ -1,20 +1,27 @@
 package Primitivo;
 
+import Modelo.Cliente;
+import Modelo.Recurso;
+
 public class Ocorrencia {
-	public final int clienteId;
+	public final Cliente cliente;
 	public final Evento evento;
-	public final int recursoId;
+	public final Recurso recurso;
 	
-	public Ocorrencia(int clienteId, Evento evento, int recursoId){
-		this.clienteId = clienteId;
+	public Ocorrencia(Cliente cliente, Evento evento, Recurso recurso){
+		this.cliente = cliente;
 		this.evento = evento;
-		this.recursoId = recursoId;
+		this.recurso = recurso;
 	}
 	
 	//FUNCOES
 	
 	public String toString(){
-		return this.clienteId + " " + this.evento + " " + this.recursoId;
+		String string = "Caminhao" + this.cliente.id
+					  + " - " + this.evento + " - " 
+					  + this.recurso.nome;
+		
+		return string;
 	}
 	
 	//SUBCLASSES

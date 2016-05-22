@@ -2,50 +2,41 @@ package Primitivo;
 
 import java.util.ArrayList;
 
+import Modelo.Recurso;
+import Modelo.Simulacao;
+import PadraoDeProjeto.Captador;
 import PadraoDeProjeto.Propagador;
 
 public class LinhaDoTempo extends Propagador<Momento>{
-	private static LinhaDoTempo INSTANCIA;
 	private ArrayList<Momento> linhaDoTempo = new ArrayList<Momento>();
 		
-	private LinhaDoTempo(){
+	public LinhaDoTempo(Simulacao simulacao){
 		super();
+		inscrever((Captador<Momento>) simulacao);
 	}
-	
-	public static LinhaDoTempo invocarInstancia(){
-		if(INSTANCIA == null){
-			INSTANCIA = new LinhaDoTempo();
-		}
-		
-		return INSTANCIA;
-	}
-	
-	
+
 	//FUNCOES
 	
 	public void prosseguir(){
 		Momento presente = new Momento();
 		
 		linhaDoTempo.add(presente);
-		try {
-			(new Thread()).wait(10000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		propagar(presente);
 	}
 	
 	public void registrar(Ocorrencia registro) {
-		linhaDoTempo.get(linhaDoTempo.size()-1).add(registro);
+		if(linhaDoTempo.size() > 0){
+			linhaDoTempo.get(linhaDoTempo.size()-1).add(registro);
+		}
 	}
 	
 	//ABSTRACT
 	
-	public String toString(int recursoId){
+	public String toString(Recurso recurso){
 		String string= "";
 		
 		for(Momento momento : linhaDoTempo){
-			string += momento.toString(recursoId);
+			string += momento.toString(recurso);
 		}
 		
 		return string;
