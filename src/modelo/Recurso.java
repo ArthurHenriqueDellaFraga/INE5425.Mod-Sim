@@ -1,10 +1,10 @@
-package Modelo;
+package modelo;
 
 import java.util.ArrayList;
 
-import PadraoDeProjeto.Propagador;
-import Primitivo.Ocorrencia;
-import Primitivo.Ocorrencia.Evento;
+import padrao_de_projeto.Propagador;
+import primitivo.Ocorrencia;
+import primitivo.Ocorrencia.Evento;
 
 public abstract class Recurso extends Temporal{
 	public static int quantidade = 0;

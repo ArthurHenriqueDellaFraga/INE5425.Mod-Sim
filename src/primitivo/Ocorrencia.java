@@ -1,7 +1,7 @@
-package Primitivo;
+package primitivo;
 
-import Modelo.Cliente;
-import Modelo.Recurso;
+import modelo.Cliente;
+import modelo.Recurso;
 
 public class Ocorrencia {
 	public final Cliente cliente;

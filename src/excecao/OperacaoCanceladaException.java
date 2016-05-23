@@ -1,4 +1,4 @@
-package Excecao;
+package excecao;
 
 public class OperacaoCanceladaException extends RuntimeException{
 

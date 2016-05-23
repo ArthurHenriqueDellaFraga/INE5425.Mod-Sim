@@ -1,9 +1,9 @@
-package Primitivo;
+package primitivo;
 
 import java.util.ArrayList;
 
-import Modelo.Cliente;
-import Modelo.Recurso;
+import modelo.Cliente;
+import modelo.Recurso;
 
 public class Momento{
 	public static int numInstancias = 0;
