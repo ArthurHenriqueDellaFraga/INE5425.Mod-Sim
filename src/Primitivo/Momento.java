@@ -2,6 +2,7 @@ package Primitivo;
 
 import java.util.ArrayList;
 
+import Modelo.Cliente;
 import Modelo.Recurso;
 
 public class Momento{
@@ -25,6 +26,28 @@ public class Momento{
 			if(ocorrencia.recurso.nome == recurso.nome){
 				string += "    : " + ocorrencia.toString() + "\n";
 			}
+		}
+		
+		return string;
+	}
+	
+	public String toString(Cliente cliente){
+		String string = referenciaTemporal + "\n";
+		
+		for(Ocorrencia ocorrencia : ListaDeOcorrencia){
+			if(ocorrencia.cliente == cliente){
+				string += "    : " + ocorrencia.toString() + "\n";
+			}
+		}
+		
+		return string;
+	}
+	
+	public String toString(){
+		String string = referenciaTemporal + "\n";
+		
+		for(Ocorrencia ocorrencia : ListaDeOcorrencia){
+			string += "    : " + ocorrencia.toString() + "\n";
 		}
 		
 		return string;

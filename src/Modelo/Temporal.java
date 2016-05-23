@@ -1,16 +1,15 @@
 package Modelo;
 
 import PadraoDeProjeto.Captador;
+import Primitivo.LinhaDoTempo;
 import Primitivo.Momento;
 import Primitivo.Ocorrencia;
 
 public abstract class Temporal implements Captador<Momento>{
-	protected Momento momento;
+	protected Momento momento = LinhaDoTempo.inicio;
 	
 	public void registrar(Ocorrencia o){
-		if(this.momento != null){
-			this.momento.add(o);
-		}
+		this.momento.add(o);
 	};
 	
 	public void captar(Momento momento) {

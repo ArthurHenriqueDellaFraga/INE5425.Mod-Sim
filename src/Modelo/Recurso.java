@@ -2,6 +2,7 @@ package Modelo;
 
 import java.util.ArrayList;
 
+import PadraoDeProjeto.Propagador;
 import Primitivo.Ocorrencia;
 import Primitivo.Ocorrencia.Evento;
 
@@ -61,7 +62,7 @@ public abstract class Recurso extends Temporal{
 	
 	//SUBCLASSES
 	
-	public class Servico{
+	public class Servico extends Propagador<Ocorrencia>{
 		private int periodoRestante;
 		private Cliente cliente;
 		
@@ -69,17 +70,22 @@ public abstract class Recurso extends Temporal{
 			this.periodoRestante = tempoDeServico;
 			this.cliente = cliente;
 			
-			registrar(new Ocorrencia(cliente, Evento.InicioDoAtendimento, Recurso.this));
+			inscrever(cliente.getAtencao());
+			Ocorrencia o = new Ocorrencia(cliente, Evento.InicioDoAtendimento, Recurso.this);
+			propagar(o);
+			registrar(o);
 		}
 		
 		public void prosseguir(){
 			periodoRestante--;
 			
 			if(periodoRestante == 0){
-				cliente.prosseguir();
 				listaDeServicosEmAndamento.remove(cliente);
 				
-				registrar(new Ocorrencia(cliente, Evento.FimDoAtendimento, Recurso.this));
+				Ocorrencia o = new Ocorrencia(cliente, Evento.FimDoAtendimento, Recurso.this);
+				propagar(o);
+				registrar(o);
+				
 				throw new ServicoConcluidoException();
 			}
 		}

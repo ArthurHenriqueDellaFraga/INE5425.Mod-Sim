@@ -3,6 +3,9 @@ package Modelo;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import PadraoDeProjeto.Captador;
+import Primitivo.Ocorrencia;
+
 public abstract class Cliente extends Temporal{
 	public static int quantidade = 0;
 	public final int id = quantidade++;
@@ -15,13 +18,27 @@ public abstract class Cliente extends Temporal{
 		
 		this.listaDeAtividades = listaDeAtividades;
 		this.atividadeCorrente = listaDeAtividades.iterator();
-		prosseguir();
+		atividadeCorrente.next().receber(Cliente.this);
 	}
 
-	public void prosseguir() {
-		if(!atividadeCorrente.hasNext()){
-			this.atividadeCorrente = listaDeAtividades.iterator();
-		}
-		atividadeCorrente.next().receber(this);
+	public void prosseguir() { }
+	
+	public Captador<Ocorrencia> getAtencao(){
+		
+		return new Captador<Ocorrencia>() {
+			
+			public void captar(Ocorrencia ocorrencia) {
+				switch (ocorrencia.evento) {
+					case FimDoAtendimento:		
+						if(!atividadeCorrente.hasNext()){
+							Cliente.this.atividadeCorrente = listaDeAtividades.iterator();
+						}	
+						atividadeCorrente.next().receber(Cliente.this);	
+						break;
+		
+					default: break;
+				}
+			}
+		};
 	}
 }

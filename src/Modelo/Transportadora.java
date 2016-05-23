@@ -49,21 +49,20 @@ public class Transportadora extends Simulacao{
 			linhaDoTempo.prosseguir();
 		}
 		
-		for(Recurso recurso : percurso){
-			System.out.println(linhaDoTempo.toString(recurso) + "\n\n");
+		for(Caminhao caminhao : frota){
+			System.out.println(linhaDoTempo.toString(caminhao) + "\n\n");
 		}
 	}
 
 	//ABSTRACT
 	
 	public void prosseguir(){
+		for(Recurso recurso : percurso){
+			recurso.captar(momento);
+		}
 		for(Caminhao caminhao : frota){
 			caminhao.captar(momento);
 		}
-		
-		for(Recurso recurso : percurso){
-			recurso.captar(momento);
-		}		
 	}
 	
 	
