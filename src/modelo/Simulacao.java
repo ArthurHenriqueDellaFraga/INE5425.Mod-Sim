@@ -1,6 +1,6 @@
-package Modelo;
+package modelo;
 
-import Primitivo.LinhaDoTempo;
+import primitivo.LinhaDoTempo;
 
 public abstract class Simulacao extends Temporal {
 	protected LinhaDoTempo linhaDoTempo = new LinhaDoTempo(this);

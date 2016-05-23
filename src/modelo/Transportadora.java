@@ -1,8 +1,21 @@
-package Modelo;
+package modelo;
 
 import java.util.ArrayList;
 
 public class Transportadora extends Simulacao{
+	
+	//TAMANHO DA FROTA
+	private final int TAMANHO_FROTA = 2;
+	
+	//QUANTIDADE DE RECURSOS
+	private final int QUANTIDADE_CARREGADOR = 2;
+	private final int QUANTIDADE_BALANCA = 1;
+	
+	//TEMPO DE ESPERA
+	private final int TEMPO_CARREGAMENTO = 5;
+	private final int TEMPO_PESAGEM = 2;
+	private final int TEMPO_ENTREGA = 10;
+	
 	private ArrayList<Recurso> percurso;
 	private ArrayList<Caminhao> frota;
 
@@ -10,20 +23,20 @@ public class Transportadora extends Simulacao{
 		super();
 		
 		this.percurso = new ArrayList<Recurso>();
-			Recurso carregamento = new Recurso("Carregador", 2){
+			Recurso carregamento = new Recurso("Carregador", QUANTIDADE_CARREGADOR){
 				public int tempoDeServico() {
-					return 5;
+					return TEMPO_CARREGAMENTO;
 				}
 			};
-			Recurso pesagem = new Recurso("Balança", 1) {
+			Recurso pesagem = new Recurso("BalanÃ§a", QUANTIDADE_BALANCA) {
 				public int tempoDeServico() {
-					return 3;
+					return TEMPO_PESAGEM;
 				}
 
 			};
 			Recurso entrega = new Recurso("Estrada") {
 				public int tempoDeServico() {
-					return 10;
+					return TEMPO_ENTREGA;
 				}
 			};
 		
@@ -33,13 +46,9 @@ public class Transportadora extends Simulacao{
 		
 		
 		this.frota = new ArrayList<Caminhao>();
-			Caminhao caminhao1 = new Caminhao(percurso);
-			Caminhao caminhao2 = new Caminhao(percurso);
-			
-			this.frota.add(caminhao1);
-			this.frota.add(caminhao2);
-
-
+		for(int i = 0; i < TAMANHO_FROTA; i++){
+			this.frota.add(new Caminhao(percurso));
+		}
 	}
 	
 	//FUNCOES

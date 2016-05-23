@@ -1,8 +1,8 @@
-package Visao;
+package visao;
 
 import javax.swing.JOptionPane;
 
-import Excecao.OperacaoCanceladaException;
+import excecao.OperacaoCanceladaException;
 
 public abstract class Comunicador {
 	
@@ -12,17 +12,17 @@ public abstract class Comunicador {
 		JOptionPane.showMessageDialog(null, mensagem, titulo, tipo);
 	}
 	
-		public void apresentarMensagemDeErro(String mensagem, String titulo){
-			apresentarMensagem(mensagem, titulo, JOptionPane.ERROR_MESSAGE);
-		}
+	public void apresentarMensagemDeErro(String mensagem, String titulo){
+		apresentarMensagem(mensagem, titulo, JOptionPane.ERROR_MESSAGE);
+	}
 		
-		public void apresentarMensagemDeInformacao(String mensagem, String titulo){
-			apresentarMensagem(mensagem, titulo, JOptionPane.INFORMATION_MESSAGE);
-		}
+	public void apresentarMensagemDeInformacao(String mensagem, String titulo){
+		apresentarMensagem(mensagem, titulo, JOptionPane.INFORMATION_MESSAGE);
+	}
 		
-		public void apresentarMensagemDeAlerta(String mensagem, String titulo){
-			apresentarMensagem(mensagem, titulo, JOptionPane.WARNING_MESSAGE);
-		}
+	public void apresentarMensagemDeAlerta(String mensagem, String titulo){
+		apresentarMensagem(mensagem, titulo, JOptionPane.WARNING_MESSAGE);
+	}
 		
 	public int apresentarDialogoOpitativo(String mensagem, String titulo, Object[] opcoes){
 		int retorno = JOptionPane.showOptionDialog(null, mensagem, titulo, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);

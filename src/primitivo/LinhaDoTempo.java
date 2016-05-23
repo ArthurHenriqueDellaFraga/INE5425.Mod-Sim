@@ -1,12 +1,12 @@
-package Primitivo;
+package primitivo;
 
 import java.util.ArrayList;
 
-import Modelo.Cliente;
-import Modelo.Recurso;
-import Modelo.Simulacao;
-import PadraoDeProjeto.Captador;
-import PadraoDeProjeto.Propagador;
+import modelo.Cliente;
+import modelo.Recurso;
+import modelo.Simulacao;
+import padrao_de_projeto.Captador;
+import padrao_de_projeto.Propagador;
 
 public class LinhaDoTempo extends Propagador<Momento>{
 	public static final Momento inicio = new Momento();

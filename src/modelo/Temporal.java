@@ -1,9 +1,9 @@
-package Modelo;
+package modelo;
 
-import PadraoDeProjeto.Captador;
-import Primitivo.LinhaDoTempo;
-import Primitivo.Momento;
-import Primitivo.Ocorrencia;
+import padrao_de_projeto.Captador;
+import primitivo.LinhaDoTempo;
+import primitivo.Momento;
+import primitivo.Ocorrencia;
 
 public abstract class Temporal implements Captador<Momento>{
 	protected Momento momento = LinhaDoTempo.inicio;

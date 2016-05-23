@@ -1,4 +1,4 @@
-package PadraoDeProjeto;
+package padrao_de_projeto;
 
 public abstract interface Captador<T> {
 	

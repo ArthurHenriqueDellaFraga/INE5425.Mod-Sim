@@ -1,8 +1,8 @@
-package Modelo;
+package modelo;
 
 import java.util.ArrayList;
 
-import Primitivo.Momento;
+import primitivo.Momento;
 
 public class Caminhao extends Cliente{
 

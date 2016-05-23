@@ -1,11 +1,11 @@
-package Controle;
+package controle;
 
-import Excecao.OperacaoCanceladaException;
-import Modelo.Transportadora;
-import Visao.InterfaceDaAplicacao;
+import excecao.OperacaoCanceladaException;
+import modelo.Transportadora;
+import visao.InterfaceDaAplicacao;
 
 public class GerenteDaAplicacao{
-	private static GerenteDaAplicacao INSTANCIA;
+	private static GerenteDaAplicacao INSTANCIA = new GerenteDaAplicacao();
 	private final InterfaceDaAplicacao INTERFACE_DA_APLICACAO = InterfaceDaAplicacao.invocarInstancia();
 	
 	private GerenteDaAplicacao(){
@@ -13,10 +13,6 @@ public class GerenteDaAplicacao{
 	}
 	
 	public static GerenteDaAplicacao invocarInstancia(){
-		if(INSTANCIA == null){
-			INSTANCIA = new GerenteDaAplicacao();
-		}
-		
 		return INSTANCIA;
 	}
 	

@@ -1,10 +1,10 @@
-package Modelo;
+package modelo;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import PadraoDeProjeto.Captador;
-import Primitivo.Ocorrencia;
+import padrao_de_projeto.Captador;
+import primitivo.Ocorrencia;
 
 public abstract class Cliente extends Temporal{
 	public static int quantidade = 0;
