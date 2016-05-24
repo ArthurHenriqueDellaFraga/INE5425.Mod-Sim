@@ -56,8 +56,7 @@ public class LinhaDoTempo extends Propagador<Momento>{
 				
 			}	
 		}
-		
-		System.out.println(listaDeOcorrencias.toArray(new String[][]{}).toString());
+	
 		return listaDeOcorrencias.toArray(new String[][]{});
 	}
 	

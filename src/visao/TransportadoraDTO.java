@@ -5,7 +5,7 @@ public class TransportadoraDTO{
 	public final String[][] conteudoLinhaDoTempo;
 	
 	public TransportadoraDTO(){
-		this.conteudoLinhaDoTempo = new String[][]{{}};
+		this.conteudoLinhaDoTempo = new String[][]{{"-", "-", "-", "-"}};
 	}
 	
 	public TransportadoraDTO(String[][] conteudoLinhaDoTempo){

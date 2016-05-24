@@ -84,8 +84,9 @@ public class Transportadora extends Simulacao{
 			linhaDoTempo.prosseguir();
 		}
 		
-		calcularNumeroEntidadesNaFila();
-
+		//calcularNumeroEntidadesNaFila();
+		
+		propagador.propagar();
 	}
 	
 	public void calcularNumeroEntidadesNaFila(){
