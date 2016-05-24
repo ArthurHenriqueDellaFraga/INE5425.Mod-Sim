@@ -27,6 +27,18 @@ public class Ocorrencia {
 	//SUBCLASSES
 	
 	public enum Evento {
-		Chegada, InicioDoAtendimento, FimDoAtendimento
+		Chegada("Chegada"),
+		InicioDoAtendimento("Inicio do atendimento"),
+		FimDoAtendimento("Fim do atendimento");
+		
+		private String string;
+		
+		Evento(String string){
+			this.string = string;
+		}
+		
+		public String toString(){
+			return string;
+		}
 	}
 }

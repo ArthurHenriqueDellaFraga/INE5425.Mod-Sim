@@ -1,6 +1,7 @@
 package visao;
 
 import javax.swing.JFrame;
+import modelo.Transportadora;
 
 public class InterfaceDaAplicacao extends Comunicador{
 	private static InterfaceDaAplicacao INSTANCIA = new InterfaceDaAplicacao();
@@ -25,6 +26,18 @@ public class InterfaceDaAplicacao extends Comunicador{
 				+ "\n\n" + "Arthur Henrique Della Fraga \t 11200623"
 				+ "\n" + "Felipe Calistro Chaiben \t 11200632";
 		
-		return apresentarDialogoOpitativo(mensagemInicializacao, "TRABALHO 1 - TRANSPORTADORA", new String[]{"Iniciar"});
+		return apresentarDialogoOpitativo(mensagemInicializacao, "TRABALHO 1 - TRANSPORTADORA", new String[]{"Inicialização padrao", "Inicialização customizada"});
+	}
+	
+	public void inicializacaoCustomizada(){
+		String titulo = "Definicao de valores";
+		
+		Transportadora.NUMERO_DE_CAMINHOES = coletarNumero("Numero de Caminhoes", titulo);
+		Transportadora.QUANTIDADE_CARREGADOR = coletarNumero("Quantidade de Carregadores", titulo);
+		Transportadora.QUANTIDADE_BALANCA = coletarNumero("Quantidade de Balancas", titulo);
+		
+		Transportadora.TEMPO_CARGA = coletarNumero("Tempo de Carga", titulo);
+		Transportadora.TEMPO_PESAGEM = coletarNumero("Tempo de Pesagem", titulo);
+		Transportadora.TEMPO_TRANSPORTE = coletarNumero("Tempo de Transporte", titulo);
 	}
 }

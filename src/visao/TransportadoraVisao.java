@@ -1,6 +1,5 @@
 package visao;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -35,6 +34,13 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 					}
 				});
 			}},
+			new JButton("Prosseguir até o próximo evento"){{
+				addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e){
+						CONTROLE.prosseguirProximoEvento();
+					}
+				});
+			}},
 	};
 	
 	
@@ -52,8 +58,9 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		
 		this.add(jLabel);
 		this.add(jTabbedPane);
-		this.add(jButton[0]);
-		this.add(jButton[1]);
+		for(JButton button : jButton){
+			this.add(button);
+		}
 		
 		INTERFACE_DA_APLICACAO.FRAME_FAMILIAR.add(this);
 		INTERFACE_DA_APLICACAO.FRAME_FAMILIAR.setVisible(true);
