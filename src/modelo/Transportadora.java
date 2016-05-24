@@ -46,6 +46,9 @@ public class Transportadora extends Temporal{
 	public static int TEMPO_MEDIO_CICLO = 0;
 	
 	//AUXILIARES
+	private static ArrayList<Integer> filaCarregador = new ArrayList<Integer>();
+	private static ArrayList<Integer> filaPesagem = new ArrayList<Integer>();
+	
 	private static HashMap<Integer, Integer> inicioFilaCarregador = new HashMap<Integer, Integer>();
 	private static HashMap<Integer, Integer> inicioFilaPesagem = new HashMap<Integer, Integer>();
 	private static int tempoFilaCarregador = 0;
@@ -117,20 +120,31 @@ public class Transportadora extends Temporal{
 			if(ocorrencia.recurso.nome.equals("Carregador")){
 				if(insereFilaCarregamento(ocorrencia, i)){
 					QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO++;
+					filaCarregador.add(ocorrencia.cliente.id);
 				}
 				else if(ocorrencia.evento.equals(Evento.InicioDoAtendimento)){
-					QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO--;
+					if(filaCarregador.contains(ocorrencia.cliente.id)){
+						for(Integer key : filaPesagem){
+							if(filaCarregador.get(key).equals(ocorrencia.cliente.id)){
+								QUANTIDADE_CAMINHOES_FILA_PESAGEM--;
+								filaCarregador.remove(ocorrencia.cliente.id);
+							}
+						}
+					}
 				}
 			}
 			else if (ocorrencia.recurso.nome.equals("Balanca")){
 				if(insereFilaPesagem(ocorrencia)){
 					QUANTIDADE_CAMINHOES_FILA_PESAGEM++;
+					filaPesagem.add(ocorrencia.cliente.id);
 				}
 				else if(ocorrencia.evento.equals(Evento.InicioDoAtendimento)){
-					for(int j = 0; j < momento.listaDeOcorrencia.size(); j++){
-						if(ocorrencia.cliente.equals(momento.listaDeOcorrencia.get(j).cliente) &&  
-								!momento.listaDeOcorrencia.get(j).evento.equals(Evento.Chegada)){
-							QUANTIDADE_CAMINHOES_FILA_PESAGEM--;
+					if(filaPesagem.contains(ocorrencia.cliente.id)){
+						for(Integer key : filaPesagem){
+							if(filaPesagem.get(key).equals(ocorrencia.cliente.id)){
+								QUANTIDADE_CAMINHOES_FILA_PESAGEM--;
+								filaPesagem.remove(ocorrencia.cliente.id);
+							}
 						}
 					}
 				}
@@ -159,9 +173,9 @@ public class Transportadora extends Temporal{
 		}
 		
 		int i = momento.referenciaTemporal;
-		if(i == 1){
-			TAMANHO_MEDIO_FILA_CARREGAMENTO = QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO;
-			TAMANHO_MEDIO_FILA_PESAGEM = QUANTIDADE_CAMINHOES_FILA_PESAGEM;
+		if(i == 0 || i == 1){
+			TAMANHO_MEDIO_FILA_CARREGAMENTO += QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO;
+			TAMANHO_MEDIO_FILA_PESAGEM += QUANTIDADE_CAMINHOES_FILA_PESAGEM;
 		}
 		else{
 			TAMANHO_MEDIO_FILA_CARREGAMENTO = ((TAMANHO_MEDIO_FILA_CARREGAMENTO * (i-1)) + QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO) / i;
@@ -266,13 +280,15 @@ public class Transportadora extends Temporal{
 					inicioFilaPesagemCiclo.put(ocorrencia.cliente.id, momento.referenciaTemporal);
 				}
 				else if(ocorrencia.evento.equals(Evento.FimDoAtendimento)){
-					int tempoTotalFila = tempoCiclo.get(ocorrencia.cliente.id);
-					if(inicioFilaPesagemCiclo.get(ocorrencia.cliente.id) != null){
-						int tempoInicioFila = inicioFilaPesagemCiclo.get(ocorrencia.cliente.id);
-						tempoTotalFila += momento.referenciaTemporal - tempoInicioFila;
-						inicioFilaPesagemCiclo.remove(ocorrencia.cliente.id);
+					if(tempoCiclo.get(ocorrencia.cliente.id) != null){
+						int tempoTotalFila = tempoCiclo.get(ocorrencia.cliente.id);
+						if(inicioFilaPesagemCiclo.get(ocorrencia.cliente.id) != null){
+							int tempoInicioFila = inicioFilaPesagemCiclo.get(ocorrencia.cliente.id);
+							tempoTotalFila += momento.referenciaTemporal - tempoInicioFila;
+							inicioFilaPesagemCiclo.remove(ocorrencia.cliente.id);
+						}
+						tempoCiclo.put(ocorrencia.cliente.id, tempoTotalFila);
 					}
-					tempoCiclo.put(ocorrencia.cliente.id, tempoTotalFila);
 				}
 			}
 			else if(ocorrencia.recurso.nome.equals("Estrada")){
@@ -365,7 +381,8 @@ public class Transportadora extends Temporal{
 		calcularTempoCiclo();
 		
 		System.out.println("Momento: " + momento.referenciaTemporal);
-		System.out.println();
+		System.out.println(filaCarregador);
+		System.out.println(filaPesagem);
 		
 		propagador.propagar();
 	}
