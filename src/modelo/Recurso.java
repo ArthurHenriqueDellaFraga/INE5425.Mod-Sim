@@ -11,9 +11,9 @@ public abstract class Recurso extends Temporal{
 	public final int id = quantidade++;
 	public final String nome;
 	
-	private int capacidade = 0;	
+	public int capacidade = 0;	
 	private ArrayList<Cliente> filaDeEspera = new ArrayList<Cliente>();
-	private ArrayList<Servico> listaDeServicosEmAndamento = new ArrayList<Servico>();
+	public ArrayList<Servico> listaDeServicosEmAndamento = new ArrayList<Servico>();
 	
 	private ArrayList<Cliente> filaDeChegada = new ArrayList<Cliente>();
 	
