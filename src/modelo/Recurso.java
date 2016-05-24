@@ -32,6 +32,8 @@ public abstract class Recurso extends Temporal{
 	//FUNCOES
 	
 	public void receber(Cliente cliente){
+		Ocorrencia o = new Ocorrencia(cliente, Evento.Chegada, Recurso.this);
+		registrar(o);
 		if(capacidade == 0 || listaDeServicosEmAndamento.size() < capacidade){
 			listaDeServicosEmAndamento.add(
 				new Servico(tempoDeServico(), cliente)
