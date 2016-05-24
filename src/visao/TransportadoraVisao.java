@@ -15,26 +15,25 @@ import controle.TransportadoraControle;
 import padrao_de_projeto.Captador;
 
 public class TransportadoraVisao extends JPanel implements Captador<TransportadoraDTO>{
+	private final InterfaceDaAplicacao INTERFACE_DA_APLICACAO = InterfaceDaAplicacao.invocarInstancia();
 	private final TransportadoraControle CONTROLE;
 	
 	private JLabel jLabel = new JLabel("");
 	private JPanel[] jPanel = new JPanel[]{ new JPanel(), new JPanel() };
 	private JButton[] jButton = new JButton[]{
-			new JButton("Prosseguir"){{
+			new JButton("Prosseguir 1 vez"){{
 				addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e){					
 						CONTROLE.prosseguir(1);
 					}
 				});
-				setEnabled(true);
 			}},
-			new JButton("Prosseguir*"){{
+			new JButton("Prosseguir * vezes"){{
 				addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e){					
-						CONTROLE.prosseguir(1);
+						CONTROLE.prosseguir(INTERFACE_DA_APLICACAO.coletarNumero("Insira o periodo a se prosseguir", "Coletar Numero"));
 					}
 				});
-				setEnabled(false);
 			}},
 	};
 	
@@ -54,9 +53,10 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		this.add(jLabel);
 		this.add(jTabbedPane);
 		this.add(jButton[0]);
+		this.add(jButton[1]);
 		
-		InterfaceDaAplicacao.invocarInstancia().FRAME_FAMILIAR.add(this);
-		InterfaceDaAplicacao.invocarInstancia().FRAME_FAMILIAR.setVisible(true);
+		INTERFACE_DA_APLICACAO.FRAME_FAMILIAR.add(this);
+		INTERFACE_DA_APLICACAO.FRAME_FAMILIAR.setVisible(true);
 	}
 	
 	//FUNCOES
@@ -65,8 +65,8 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		atualizarReferenciaTemporal(dto.referenciaTemporal);
 		atualizarLinhaDoTempo(dto.conteudoLinhaDoTempo, dto.cabecalhoLinhaDoTempo);
 	
-		InterfaceDaAplicacao.invocarInstancia().FRAME_FAMILIAR.revalidate();
-		InterfaceDaAplicacao.invocarInstancia().FRAME_FAMILIAR.repaint();
+		INTERFACE_DA_APLICACAO.FRAME_FAMILIAR.revalidate();
+		INTERFACE_DA_APLICACAO.FRAME_FAMILIAR.repaint();
 	}
 	
 	private void atualizarReferenciaTemporal(int referenciaTemporal){

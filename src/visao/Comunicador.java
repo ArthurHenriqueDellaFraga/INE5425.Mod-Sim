@@ -37,6 +37,21 @@ public abstract class Comunicador {
 	public String coletarTextoSimples(String mensagem, String titulo){
 		return JOptionPane.showInputDialog(null, mensagem, titulo, JOptionPane.QUESTION_MESSAGE);
 	}
+	
+	public int coletarNumero(String mensagem, String titulo){
+		int retorno = 0;
+		String string = "";
+		
+		try{
+			string = JOptionPane.showInputDialog(null, mensagem, titulo, JOptionPane.QUESTION_MESSAGE);
+			retorno = Integer.parseInt(string);
+		}
+		catch(NumberFormatException e){
+			apresentarMensagemDeErro("\"" + string + "\" não é um número", titulo);
+		}
+		
+		return retorno;
+	}
 
 	/*
 	public int apresentarDialogoPersonalizado(Object[] listaDeComponentes, String titulo){

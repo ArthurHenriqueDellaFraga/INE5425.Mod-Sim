@@ -35,36 +35,12 @@ public abstract class Recurso extends Temporal{
 	
 	public void receber(Cliente cliente, int referenciaTemporal){
 		if(referenciaTemporal < momento.referenciaTemporal){
+			
 			receber(cliente);
 		}
 		else{
 			filaDeChegada.add(cliente);
 		}
-	}
-	
-	//ABSTRACT
-	
-	public void prosseguir(){		
-		for(int i = 0; i < listaDeServicosEmAndamento.size(); i++){
-			Servico servico = listaDeServicosEmAndamento.get(i);
-			
-			try{
-				servico.prosseguir();
-			}
-			catch(Servico.ServicoConcluidoException e){
-				if(!filaDeEspera.isEmpty()){
-					listaDeServicosEmAndamento.add(
-							i, 
-							new Servico(tempoDeServico(), filaDeEspera.remove(0))				
-					);
-				}
-			}
-		}
-		
-		for(Cliente cliente : filaDeChegada){
-			receber(cliente);
-		}
-		filaDeChegada.clear();
 	}
 	
 	private void receber(Cliente cliente){
@@ -78,6 +54,35 @@ public abstract class Recurso extends Temporal{
 		else{
 			filaDeEspera.add(cliente);
 		}
+	}
+	
+	//ABSTRACT
+	
+	public void prosseguir(){
+		for(int i = 0; i < listaDeServicosEmAndamento.size(); i++){
+			Servico servico = listaDeServicosEmAndamento.get(i);
+			
+			try{
+				servico.prosseguir();
+			}
+			catch(Servico.ServicoConcluidoException e){
+				listaDeServicosEmAndamento.remove(i);
+				if(!filaDeEspera.isEmpty()){
+					listaDeServicosEmAndamento.add(
+							i, 
+							new Servico(tempoDeServico(), filaDeEspera.remove(0))				
+					);
+				}
+				else{
+					i--;
+				}
+			}
+		}
+		
+		for(Cliente cliente : filaDeChegada){
+			receber(cliente);
+		}
+		filaDeChegada.clear();
 	}
 	
 	public abstract int tempoDeServico();
@@ -94,8 +99,8 @@ public abstract class Recurso extends Temporal{
 			
 			inscrever(cliente.getAtencao());
 			Ocorrencia o = new Ocorrencia(cliente, Evento.InicioDoAtendimento, Recurso.this);
-			propagar(o);
 			registrar(o);
+			propagar(o);
 		}
 		
 		public void prosseguir(){
@@ -105,8 +110,8 @@ public abstract class Recurso extends Temporal{
 				listaDeServicosEmAndamento.remove(cliente);
 				
 				Ocorrencia o = new Ocorrencia(cliente, Evento.FimDoAtendimento, Recurso.this);
-				propagar(o);
 				registrar(o);
+				propagar(o);
 				
 				throw new ServicoConcluidoException();
 			}
