@@ -47,7 +47,7 @@ public class Transportadora extends Temporal{
 	private static int tempoFilaPesagem = 0;
 	
 	//TAMANHO DA FROTA
-	private final int NUMERO_DE_CAMINHOES = 7;
+	public static int NUMERO_DE_CAMINHOES = 7;
 	
 	//QUANTIDADE DE RECURSOS
 	public static int QUANTIDADE_CARREGADOR = 2;
