@@ -200,6 +200,7 @@ public class Transportadora extends Simulacao{
 		public void propagar(){
 			propagar(
 				new TransportadoraDTO(
+						linhaDoTempo.getPresente().referenciaTemporal,
 						linhaDoTempo.toTable()
 				)
 			);
