@@ -2,6 +2,8 @@ package modelo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import controle.TransportadoraControle;
 import padrao_de_projeto.Propagador;
@@ -9,6 +11,7 @@ import primitivo.LinhaDoTempo;
 import primitivo.Momento;
 import primitivo.Ocorrencia;
 import primitivo.Ocorrencia.Evento;
+import utils.Tuple;
 import visao.TransportadoraDTO;
 
 public class Transportadora extends Temporal{
@@ -39,6 +42,9 @@ public class Transportadora extends Temporal{
 	public static int TEMPO_MAXIMO_ENTIDADE_FILA_PESAGEM = Integer.MIN_VALUE;
 	public static int TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM = 0;
 	
+	public static int TEMPO_MINIMO_CICLO = Integer.MAX_VALUE;
+	public static int TEMPO_MAXIMO_CICLO = Integer.MIN_VALUE;
+	public static int TEMPO_MEDIO_CICLO = 0;
 	
 	//AUXILIARES
 	private static HashMap<Integer, Integer> inicioFilaCarregador = new HashMap<Integer, Integer>();
@@ -46,8 +52,13 @@ public class Transportadora extends Temporal{
 	private static int tempoFilaCarregador = 0;
 	private static int tempoFilaPesagem = 0;
 	
+	private static HashMap<Integer, Integer> inicioFilaCarregadorCiclo = new HashMap<Integer, Integer>();
+	private static HashMap<Integer, Integer> inicioFilaPesagemCiclo = new HashMap<Integer, Integer>();
+	private static HashMap<Integer, Integer> tempoCiclo = new HashMap<Integer, Integer>();
+	private static HashMap<Integer, ArrayList<Integer>> listaDeCiclos = new HashMap<Integer, ArrayList<Integer>>();
+ 	
 	//TAMANHO DA FROTA
-	public static int NUMERO_DE_CAMINHOES = 7;
+	public static int NUMERO_DE_CAMINHOES = 3;
 	
 	//QUANTIDADE DE RECURSOS
 	public static int QUANTIDADE_CARREGADOR = 2;
@@ -114,7 +125,8 @@ public class Transportadora extends Temporal{
 								numOcorrencias++;
 							}
 							if(ocorrencia.cliente.equals(ocorrencia2.cliente) &&  
-									!ocorrencia2.evento.equals(Evento.InicioDoAtendimento)){
+									ocorrencia2.recurso.nome.equals("Carregador") &&
+										!ocorrencia2.evento.equals(Evento.InicioDoAtendimento)){
 								QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO++;
 							}
 						}	
@@ -137,7 +149,8 @@ public class Transportadora extends Temporal{
 					for(int j = 0; j < momento.listaDeOcorrencia.size(); j++){
 						if(i != j){
 							Ocorrencia ocorrencia2 = momento.listaDeOcorrencia.get(j);
-								if(ocorrencia.cliente.equals(ocorrencia2.cliente) &&  
+							if(ocorrencia.cliente.equals(ocorrencia2.cliente) &&  
+									ocorrencia2.recurso.nome.equals("Balanca") &&
 										!ocorrencia2.evento.equals(Evento.InicioDoAtendimento)){
 									QUANTIDADE_CAMINHOES_FILA_PESAGEM++;
 								}
@@ -218,15 +231,14 @@ public class Transportadora extends Temporal{
 								numOcorrencias++;
 							}
 							if(ocorrencia.cliente.equals(ocorrencia2.cliente) &&  
-									!ocorrencia2.evento.equals(Evento.InicioDoAtendimento)){
+									ocorrencia2.recurso.nome.equals("Carregador") &&
+										!ocorrencia2.evento.equals(Evento.InicioDoAtendimento)){
 								inicioFilaCarregador.put(ocorrencia.cliente.id, momento.referenciaTemporal);
-								System.out.println("ADICIONOU ! O CLIENTE: " + ocorrencia.cliente.id);
 							}
 						}
 					}
 					if(numOcorrencias == 0){
 						inicioFilaCarregador.put(ocorrencia.cliente.id, momento.referenciaTemporal);
-						System.out.println("ADICIONOU O CLIENTE: " + ocorrencia.cliente.id);
 					}
 				}
 				else if(ocorrencia.evento.equals(Evento.InicioDoAtendimento)){
@@ -249,7 +261,8 @@ public class Transportadora extends Temporal{
 					for(int j = 0; j < momento.listaDeOcorrencia.size(); j++){
 						if(i != j){
 							Ocorrencia ocorrencia2 = momento.listaDeOcorrencia.get(j);
-								if(ocorrencia.cliente.equals(ocorrencia2.cliente) &&  
+							if(ocorrencia.cliente.equals(ocorrencia2.cliente) &&  
+									ocorrencia2.recurso.nome.equals("Balanca") &&
 										!ocorrencia2.evento.equals(Evento.InicioDoAtendimento)){
 									inicioFilaPesagem.put(ocorrencia.cliente.id, momento.referenciaTemporal);
 								}
@@ -283,6 +296,114 @@ public class Transportadora extends Temporal{
 			TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM = ((TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM * (i-1)) + tempoFilaPesagem) / i;
 		}
 	}
+	
+	public void calcularTempoCiclo(){
+		for(int i = 0; i < momento.listaDeOcorrencia.size(); i++){
+			Ocorrencia ocorrencia = momento.listaDeOcorrencia.get(i);
+			if(ocorrencia.recurso.nome.equals("Carregador")){
+				if(insereFilaCarregamento(ocorrencia, i)){
+					inicioFilaCarregadorCiclo.put(ocorrencia.cliente.id, momento.referenciaTemporal);
+				}
+				else if(ocorrencia.evento.equals(Evento.FimDoAtendimento)){
+					int tempoTotalFila = 0;
+					if(inicioFilaCarregadorCiclo.get(ocorrencia.cliente.id) != null){
+						int tempoInicioFila = inicioFilaCarregadorCiclo.get(ocorrencia.cliente.id);
+						tempoTotalFila += momento.referenciaTemporal - tempoInicioFila;
+						inicioFilaCarregadorCiclo.remove(ocorrencia.cliente.id);
+					}
+					else{
+						tempoTotalFila = TEMPO_CARGA;
+					}
+					tempoCiclo.put(ocorrencia.cliente.id, tempoTotalFila);
+				}
+			}
+			else if (ocorrencia.recurso.nome.equals("Balanca")){
+				if(insereFilaPesagem(ocorrencia)){
+					inicioFilaPesagemCiclo.put(ocorrencia.cliente.id, momento.referenciaTemporal);
+				}
+				else if(ocorrencia.evento.equals(Evento.FimDoAtendimento)){
+					int tempoTotalFila = tempoCiclo.get(ocorrencia.cliente.id);
+					if(inicioFilaPesagemCiclo.get(ocorrencia.cliente.id) != null){
+						int tempoInicioFila = inicioFilaPesagemCiclo.get(ocorrencia.cliente.id);
+						tempoTotalFila += momento.referenciaTemporal - tempoInicioFila;
+						inicioFilaPesagemCiclo.remove(ocorrencia.cliente.id);
+					}
+					tempoCiclo.put(ocorrencia.cliente.id, tempoTotalFila);
+				}
+			}
+			else if(ocorrencia.recurso.nome.equals("Estrada")){
+				if(ocorrencia.evento.equals(Evento.FimDoAtendimento)){
+					int tempoTotalFila = tempoCiclo.get(ocorrencia.cliente.id);
+					tempoCiclo.put(ocorrencia.cliente.id, tempoTotalFila + TEMPO_TRANSPORTE);
+					ArrayList<Integer> ciclos = listaDeCiclos.get(ocorrencia.cliente.id);
+					if(ciclos == null){
+						ciclos = new ArrayList<Integer>();
+					}
+					ciclos.add(tempoTotalFila + TEMPO_TRANSPORTE);
+					listaDeCiclos.put(ocorrencia.cliente.id, ciclos);
+				}
+			}
+		}
+		
+		calcularTemposCiclo();
+	}
+	
+	private void calcularTemposCiclo(){
+		Set<Integer> keySet = listaDeCiclos.keySet();
+		int somaTempo = 0;
+		int i = 0;
+		for(Integer key : keySet){
+			for(Integer ciclo : listaDeCiclos.get(key)){
+				if(ciclo > TEMPO_MAXIMO_CICLO){
+					TEMPO_MAXIMO_CICLO = ciclo;
+				}
+				if(ciclo < TEMPO_MINIMO_CICLO){
+					TEMPO_MINIMO_CICLO = ciclo;
+				}
+				somaTempo += ciclo;
+				i++;
+			}
+		}
+		if(i != 0){
+			TEMPO_MEDIO_CICLO = somaTempo / i;
+		}
+	}
+	
+	private boolean insereFilaCarregamento(Ocorrencia ocorrencia, int i){
+		if(ocorrencia.evento.equals(Evento.Chegada)){
+			int numOcorrencias = 0;
+			for(int j = 0; j < momento.listaDeOcorrencia.size(); j++){
+					Ocorrencia ocorrencia2 = momento.listaDeOcorrencia.get(j);
+					if(ocorrencia.cliente.equals(ocorrencia2.cliente)){
+						numOcorrencias++;
+					}
+					if(i != j &&
+						ocorrencia.cliente.equals(ocorrencia2.cliente) &&  
+							ocorrencia2.recurso.nome.equals("Carregador") &&
+								!ocorrencia2.evento.equals(Evento.InicioDoAtendimento)){
+						return true;
+					}
+				}
+			if(numOcorrencias == 1){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean insereFilaPesagem(Ocorrencia ocorrencia){
+		if(ocorrencia.evento.equals(Evento.Chegada)){
+			for(int j = 0; j < momento.listaDeOcorrencia.size(); j++){
+				Ocorrencia ocorrencia2 = momento.listaDeOcorrencia.get(j);
+					if(ocorrencia.cliente.equals(ocorrencia2.cliente) &&  
+						ocorrencia2.recurso.nome.equals("Balanca") &&
+						!ocorrencia2.evento.equals(Evento.InicioDoAtendimento)){
+							return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	//ABSTRACT
 	
@@ -297,15 +418,7 @@ public class Transportadora extends Temporal{
 		calcularNumeroEntidadesNaFila();
 		calcularTaxaMediaOcupacaoRecursos();
 		calcularTempoEntidadeFila();
-		
-		System.out.println("Momento: " + momento.referenciaTemporal);
-		System.out.println("Tempo máximo na fila carregador: " + TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR);
-		System.out.println("Tempo minimo na fila carregador: " + TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR);
-		System.out.println("Tempo medio na fila carregador: " + TEMPO_MEDIO_ENTIDADE_FILA_CARREGADOR);
-		
-		System.out.println("Tempo máximo na fila pesagem: " + TEMPO_MAXIMO_ENTIDADE_FILA_PESAGEM);
-		System.out.println("Tempo minimo na fila pesagem: " + TEMPO_MINIMO_ENTIDADE_FILA_PESAGEM);
-		System.out.println("Tempo medio na fila pesagem: " + TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM);
+		calcularTempoCiclo();
 		
 		propagador.propagar();
 	}
