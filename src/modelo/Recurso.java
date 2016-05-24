@@ -11,9 +11,9 @@ public abstract class Recurso extends Temporal{
 	public final int id = quantidade++;
 	public final String nome;
 	
-	private int capacidade = 0;	
+	public int capacidade = 0;	
 	private ArrayList<Cliente> filaDeEspera = new ArrayList<Cliente>();
-	private ArrayList<Servico> listaDeServicosEmAndamento = new ArrayList<Servico>();
+	public ArrayList<Servico> listaDeServicosEmAndamento = new ArrayList<Servico>();
 	
 	private ArrayList<Cliente> filaDeChegada = new ArrayList<Cliente>();
 	
@@ -94,8 +94,8 @@ public abstract class Recurso extends Temporal{
 			
 			inscrever(cliente.getAtencao());
 			Ocorrencia o = new Ocorrencia(cliente, Evento.InicioDoAtendimento, Recurso.this);
-			propagar(o);
 			registrar(o);
+			propagar(o);
 		}
 		
 		public void prosseguir(){
@@ -105,8 +105,8 @@ public abstract class Recurso extends Temporal{
 				listaDeServicosEmAndamento.remove(cliente);
 				
 				Ocorrencia o = new Ocorrencia(cliente, Evento.FimDoAtendimento, Recurso.this);
-				propagar(o);
 				registrar(o);
+				propagar(o);
 				
 				throw new ServicoConcluidoException();
 			}

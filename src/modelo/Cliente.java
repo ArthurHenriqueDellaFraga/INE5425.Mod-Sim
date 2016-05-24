@@ -32,6 +32,7 @@ public abstract class Cliente extends Temporal{
 					case FimDoAtendimento:		
 						if(!atividadeCorrente.hasNext()){
 							Cliente.this.atividadeCorrente = listaDeAtividades.iterator();
+							Transportadora.CONTADOR_VIAGENS++;
 						}	
 						atividadeCorrente.next().receber(Cliente.this, momento.referenciaTemporal);	
 						break;

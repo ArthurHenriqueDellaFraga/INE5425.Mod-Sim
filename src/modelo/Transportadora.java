@@ -1,6 +1,7 @@
 package modelo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import controle.TransportadoraControle;
 import padrao_de_projeto.Propagador;
@@ -25,6 +26,24 @@ public class Transportadora extends Temporal{
 	
 	public static int QUANTIDADE_CAMINHOS_ENTREGANDO = 0;
 	
+	public static double TAXA_MEDIA_OCUPACAO_CARREGADOR = 0;
+	public static double TAXA_MEDIA_OCUPACAO_BALANCA = 0;
+	
+	public static int CONTADOR_VIAGENS = 0;
+	
+	public static int TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR = Integer.MAX_VALUE;
+	public static int TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR = Integer.MIN_VALUE;
+	public static int TEMPO_MEDIO_ENTIDADE_FILA_CARREGADOR = 0;
+	
+	public static int TEMPO_MINIMO_ENTIDADE_FILA_PESAGEM = Integer.MAX_VALUE;
+	public static int TEMPO_MAXIMO_ENTIDADE_FILA_PESAGEM = Integer.MIN_VALUE;
+	public static int TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM = 0;
+	
+	
+	//AUXILIARES
+	private static HashMap<Integer, Integer> inicioFilaCarregador = new HashMap<Integer, Integer>();
+	private static HashMap<Integer, Integer> inicioFilaPesagem = new HashMap<Integer, Integer>();
+	private static int tempoFilaCarregador = 0;
 	
 	//TAMANHO DA FROTA
 	private final int TAMANHO_FROTA = 1;
@@ -80,7 +99,7 @@ public class Transportadora extends Temporal{
 	
 	//FUNCOES
 	
-	public void calcularNumeroEntidadesNaFila(Momento momento){
+	public void calcularNumeroEntidadesNaFila(){
 		for(int i = 0; i < momento.listaDeOcorrencia.size(); i++){
 			Ocorrencia ocorrencia = momento.listaDeOcorrencia.get(i);
 			if(ocorrencia.recurso.nome.equals("Carregador")){
@@ -101,7 +120,7 @@ public class Transportadora extends Temporal{
 					}
 				}
 			}
-			else if (ocorrencia.recurso.nome.equals("Balança")){
+			else if (ocorrencia.recurso.nome.equals("Balanca")){
 				if(ocorrencia.evento.equals(Evento.Chegada)){
 					for(int j = 0; j < momento.listaDeOcorrencia.size(); j++){
 						if(ocorrencia.cliente.equals(momento.listaDeOcorrencia.get(j).cliente) &&  
@@ -141,6 +160,94 @@ public class Transportadora extends Temporal{
 		if(QUANTIDADE_CAMINHOES_FILA_PESAGEM > TAMANHO_MAXIMO_FILA_PESAGEM){
 			TAMANHO_MAXIMO_FILA_PESAGEM = QUANTIDADE_CAMINHOES_FILA_PESAGEM;
 		}
+		
+		int i = momento.referenciaTemporal;
+		if(i == 1){
+			TAMANHO_MEDIO_FILA_CARREGAMENTO = QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO;
+			TAMANHO_MEDIO_FILA_PESAGEM = QUANTIDADE_CAMINHOES_FILA_PESAGEM;
+		}
+		else{
+			TAMANHO_MEDIO_FILA_CARREGAMENTO = ((TAMANHO_MEDIO_FILA_CARREGAMENTO * (i-1)) + QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO) / i;
+			TAMANHO_MEDIO_FILA_PESAGEM = ((TAMANHO_MEDIO_FILA_PESAGEM * (i-1)) + QUANTIDADE_CAMINHOES_FILA_PESAGEM) / i;
+		}
+	}
+	
+	public void calcularTaxaMediaOcupacaoRecursos(){
+		int carregadorOcupado = 0;
+		int balancaOcupado = 0;
+		for(Recurso recurso : percurso){
+			if(!(recurso.capacidade == 0 || recurso.listaDeServicosEmAndamento.size() < recurso.capacidade)){
+				if(recurso.nome.equals("Carregador")){
+					carregadorOcupado = 1;
+				}
+				else if(recurso.nome.equals("Balanca")){
+					balancaOcupado = 1;
+				}
+			}
+		}
+		
+		TAXA_MEDIA_OCUPACAO_CARREGADOR = (TAXA_MEDIA_OCUPACAO_CARREGADOR + carregadorOcupado) / momento.referenciaTemporal;
+		TAXA_MEDIA_OCUPACAO_BALANCA = (TAXA_MEDIA_OCUPACAO_BALANCA + balancaOcupado) / momento.referenciaTemporal;
+	}
+	
+	public void calcularTempoEntidadeFila(){
+		for(int i = 0; i < momento.listaDeOcorrencia.size(); i++){
+			Ocorrencia ocorrencia = momento.listaDeOcorrencia.get(i);
+			if(ocorrencia.recurso.nome.equals("Carregador")){
+				if(ocorrencia.evento.equals(Evento.Chegada)){
+					for(int j = 0; j < momento.listaDeOcorrencia.size(); j++){
+						if(ocorrencia.cliente.equals(momento.listaDeOcorrencia.get(j).cliente) &&  
+								!momento.listaDeOcorrencia.get(j).evento.equals(Evento.InicioDoAtendimento)){
+							inicioFilaCarregador.put(ocorrencia.cliente.id, momento.referenciaTemporal);
+						}	
+					}
+				}
+				else if(ocorrencia.evento.equals(Evento.FimDoAtendimento)){
+					int tempoInicioFila = inicioFilaCarregador.get(ocorrencia.cliente.id);
+					int tempoTotalFila = momento.referenciaTemporal - tempoInicioFila;
+					if(tempoTotalFila > TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR){
+						TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR = tempoTotalFila;
+					}
+					else if(tempoTotalFila < TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR){
+						TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR = tempoTotalFila;
+					}
+					tempoFilaCarregador += tempoTotalFila;
+					inicioFilaCarregador.remove(ocorrencia.cliente.id);
+				}
+			}
+			else if (ocorrencia.recurso.nome.equals("Balanca")){
+				if(ocorrencia.evento.equals(Evento.Chegada)){
+					for(int j = 0; j < momento.listaDeOcorrencia.size(); j++){
+						if(ocorrencia.cliente.equals(momento.listaDeOcorrencia.get(j).cliente) &&  
+								!momento.listaDeOcorrencia.get(j).evento.equals(Evento.InicioDoAtendimento)){
+							inicioFilaPesagem.put(ocorrencia.cliente.id, momento.referenciaTemporal);
+						}	
+					}
+				}
+				else if(ocorrencia.evento.equals(Evento.FimDoAtendimento)){
+					int tempoInicioFila = inicioFilaCarregador.get(ocorrencia.cliente.id);
+					int tempoTotalFila = momento.referenciaTemporal - tempoInicioFila;
+					if(tempoTotalFila > TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR){
+						TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR = tempoTotalFila;
+					}
+					else if(tempoTotalFila < TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR){
+						TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR = tempoTotalFila;
+					}
+					tempoFilaCarregador += tempoTotalFila;
+					inicioFilaCarregador.remove(ocorrencia.cliente.id);
+				}
+			}
+		}
+		
+		int i = momento.referenciaTemporal;
+		if(i == 1){
+			TAMANHO_MEDIO_FILA_CARREGAMENTO = QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO;
+			TAMANHO_MEDIO_FILA_PESAGEM = QUANTIDADE_CAMINHOES_FILA_PESAGEM;
+		}
+		else{
+			TAMANHO_MEDIO_FILA_CARREGAMENTO = ((TAMANHO_MEDIO_FILA_CARREGAMENTO * (i-1)) + QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO) / i;
+			TAMANHO_MEDIO_FILA_PESAGEM = ((TAMANHO_MEDIO_FILA_PESAGEM * (i-1)) + QUANTIDADE_CAMINHOES_FILA_PESAGEM) / i;
+		}
 	}
 
 	//ABSTRACT
@@ -153,16 +260,9 @@ public class Transportadora extends Temporal{
 			caminhao.captar(momento);
 		}
 		
-		calcularNumeroEntidadesNaFila(momento);
-		int i = momento.referenciaTemporal;
-		if(i == 1){
-			TAMANHO_MEDIO_FILA_CARREGAMENTO = QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO;
-			TAMANHO_MEDIO_FILA_PESAGEM = QUANTIDADE_CAMINHOES_FILA_PESAGEM;
-		}
-		else{
-			TAMANHO_MEDIO_FILA_CARREGAMENTO = ((TAMANHO_MEDIO_FILA_CARREGAMENTO * (i-1)) + QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO) / i;
-			TAMANHO_MEDIO_FILA_PESAGEM = ((TAMANHO_MEDIO_FILA_PESAGEM * (i-1)) + QUANTIDADE_CAMINHOES_FILA_PESAGEM) / i;
-		}
+		calcularNumeroEntidadesNaFila();
+		calcularTaxaMediaOcupacaoRecursos();
+		calcularTempoEntidadeFila();
 		
 		propagador.propagar();
 	}
