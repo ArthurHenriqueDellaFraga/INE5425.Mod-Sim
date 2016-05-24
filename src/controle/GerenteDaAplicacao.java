@@ -2,6 +2,7 @@ package controle;
 
 import excecao.OperacaoCanceladaException;
 import modelo.Transportadora;
+import primitivo.Momento;
 import visao.InterfaceDaAplicacao;
 
 public class GerenteDaAplicacao{
