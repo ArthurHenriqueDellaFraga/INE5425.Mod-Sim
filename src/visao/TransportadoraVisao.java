@@ -92,17 +92,14 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		jPanel[1].removeAll();
 		JTabbedPane jTabbedPane = new JTabbedPane();
 		JPanel[] jPanelAuxiliar = new JPanel[]{
-			new JPanel(new GridLayout(3, 0)),
-			new JPanel(new GridLayout(3, 0)),
-			new JPanel(new GridLayout(3, 0)),
-			new JPanel(new GridLayout(3, 0)),
-			new JPanel(new GridLayout(3, 0))
+			new JPanel(new GridLayout(2, 0)),
+			new JPanel(new GridLayout(2, 0)),
 		};
 		
 		//
 		JPanel jPanel1 = new JPanel(new GridLayout(3, 0));
-		jPanel1.add(new JLabel("Carregador"));
-		jPanel1.add(new JLabel("Tamanho da fila"));
+		jPanel1.add(new JLabel("Carregador",JLabel.CENTER));
+		jPanel1.add(new JLabel("Tamanho da fila", JLabel.CENTER));
 		String[] cabecalho = new String[]{"Tamanho atual", "Minimo", "Medio", "Maximo"};
 		Object[][] conteudo = new Object[][]{{ 
 			dto.QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO,
@@ -117,7 +114,7 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 			
 		//
 		jPanel1 = new JPanel(new GridLayout(3, 0));
-		jPanel1.add(new JLabel("Tempo da entidade na fila"));
+		jPanel1.add(new JLabel("Tempo da entidade na fila", JLabel.CENTER));
 		cabecalho = new String[]{"Minimo", "Medio", "Maximo"};
 		conteudo = new Object[][]{{ 
 			dto.TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR,
@@ -127,13 +124,13 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		jScrollPane = new JScrollPane(new JTable(conteudo, cabecalho));
 		jScrollPane.setPreferredSize(new Dimension(400, 50));
 		jPanel1.add(jScrollPane);
-		jPanel1.add(new JLabel("Taxa media de ocupacao: " + dto.TAXA_MEDIA_OCUPACAO_CARREGADOR));
+		jPanel1.add(new JLabel("Taxa media de ocupacao: " + dto.TAXA_MEDIA_OCUPACAO_CARREGADOR,JLabel.CENTER));
 		jPanelAuxiliar[0].add(jPanel1);
 		
 		//
 		jPanel1 = new JPanel(new GridLayout(3, 0));
-		jPanel1.add(new JLabel("Balanca"));
-		jPanel1.add(new JLabel("Tamanho da fila"));
+		jPanel1.add(new JLabel("Balanca", JLabel.CENTER));
+		jPanel1.add(new JLabel("Tamanho da fila", JLabel.CENTER));
 		cabecalho = new String[]{"Tamanho atual", "Minimo", "Medio", "Maximo"};
 		conteudo = new Object[][]{{ 
 			dto.QUANTIDADE_CAMINHOES_FILA_PESAGEM,
@@ -148,7 +145,7 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		
 		//
 		jPanel1 = new JPanel(new GridLayout(3, 0));
-		jPanel1.add(new JLabel("Tempo da entidade na fila"));
+		jPanel1.add(new JLabel("Tempo da entidade na fila", JLabel.CENTER));
 		cabecalho = new String[]{"Minimo", "Medio", "Maximo"};
 		conteudo = new Object[][]{{ 
 			dto.TEMPO_MINIMO_ENTIDADE_FILA_PESAGEM,
@@ -158,18 +155,17 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		jScrollPane = new JScrollPane(new JTable(conteudo, cabecalho));
 		jScrollPane.setPreferredSize(new Dimension(400, 50));
 		jPanel1.add(jScrollPane);
-		jPanel1.add(new JLabel("Taxa media de ocupacao: " + dto.TAXA_MEDIA_OCUPACAO_CARREGADOR));
+		jPanel1.add(new JLabel("Taxa media de ocupacao: " + dto.TAXA_MEDIA_OCUPACAO_CARREGADOR, JLabel.CENTER));
 		jPanelAuxiliar[1].add(jPanel1);
-		
-		jPanel1 = new JPanel(new GridLayout(3, 0));
-		jPanel1.add(new JLabel(dto.CONTADOR_VIAGENS + " entregas realzadas"));
-		jPanel1.add(new JLabel(dto.QUANTIDADE_CAMINHOS_ENTREGANDO + " caminhoes em percurso"));
-		jPanelAuxiliar[2].add(jPanel1);
 		
 		jTabbedPane.addTab("Carregador", jPanelAuxiliar[0]);
 		jTabbedPane.addTab("Balanca", jPanelAuxiliar[1]);
-		jTabbedPane.addTab("Geral", jPanelAuxiliar[2]);
 		jPanel[1].add(jTabbedPane);
 		
+		jPanel1 = new JPanel(new GridLayout(2, 0));
+		jPanel1.add(new JLabel(dto.CONTADOR_VIAGENS + " entregas realzadas", JLabel.CENTER));
+		jPanel1.add(new JLabel(dto.QUANTIDADE_CAMINHOS_ENTREGANDO + " caminhoes em percurso", JLabel.CENTER));
+		jPanel[1].add(jPanel1);
+
 	}
 }

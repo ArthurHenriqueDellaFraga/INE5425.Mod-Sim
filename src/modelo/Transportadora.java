@@ -6,7 +6,6 @@ import java.util.HashMap;
 import controle.TransportadoraControle;
 import padrao_de_projeto.Propagador;
 import primitivo.LinhaDoTempo;
-import primitivo.Momento;
 import primitivo.Ocorrencia;
 import primitivo.Ocorrencia.Evento;
 import visao.TransportadoraDTO;

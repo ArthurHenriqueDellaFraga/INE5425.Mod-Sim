@@ -35,7 +35,13 @@ public abstract class Comunicador {
 	}
 	
 	public String coletarTextoSimples(String mensagem, String titulo){
-		return JOptionPane.showInputDialog(null, mensagem, titulo, JOptionPane.QUESTION_MESSAGE);
+		String string = JOptionPane.showInputDialog(null, mensagem, titulo, JOptionPane.QUESTION_MESSAGE);
+		
+		if(string == null){
+			throw new OperacaoCanceladaException();
+		}
+		
+		return string;
 	}
 	
 	public int coletarNumero(String mensagem, String titulo){
@@ -44,7 +50,7 @@ public abstract class Comunicador {
 
 		do{
 			try{
-				string = JOptionPane.showInputDialog(null, mensagem, titulo, JOptionPane.QUESTION_MESSAGE);
+				string = coletarTextoSimples(mensagem, titulo);
 				retorno = Integer.parseInt(string);
 			}
 			catch(NumberFormatException e){
