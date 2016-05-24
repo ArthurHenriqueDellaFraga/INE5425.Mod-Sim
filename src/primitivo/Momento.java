@@ -9,24 +9,22 @@ public class Momento{
 	public static int numInstancias = 0;
 	public int referenciaTemporal = numInstancias++;
 	
-	private ArrayList<Ocorrencia> ListaDeOcorrencia = new ArrayList<Ocorrencia>();
-	
-	public ArrayList<Ocorrencia> getListaDeOcorrencia(){
-		return ListaDeOcorrencia;
-	}
+	public final ArrayList<Ocorrencia> listaDeOcorrencia = new ArrayList<Ocorrencia>();
 	
 	public Momento(){ }
 	
 	//FUNCOES
 	
 	public void add(Ocorrencia o){
-		ListaDeOcorrencia.add(o);
+		listaDeOcorrencia.add(o);
 	}
+	
+	//ABSTRACT
 	
 	public String toString(Recurso recurso){
 		String string = referenciaTemporal + "\n";
 		
-		for(Ocorrencia ocorrencia : ListaDeOcorrencia){
+		for(Ocorrencia ocorrencia : listaDeOcorrencia){
 			if(ocorrencia.recurso.nome == recurso.nome){
 				string += "    : " + ocorrencia.toString() + "\n";
 			}
@@ -38,7 +36,7 @@ public class Momento{
 	public String toString(Cliente cliente){
 		String string = referenciaTemporal + "\n";
 		
-		for(Ocorrencia ocorrencia : ListaDeOcorrencia){
+		for(Ocorrencia ocorrencia : listaDeOcorrencia){
 			if(ocorrencia.cliente == cliente){
 				string += "    : " + ocorrencia.toString() + "\n";
 			}
@@ -50,7 +48,7 @@ public class Momento{
 	public String toString(){
 		String string = referenciaTemporal + "\n";
 		
-		for(Ocorrencia ocorrencia : ListaDeOcorrencia){
+		for(Ocorrencia ocorrencia : listaDeOcorrencia){
 			string += "    : " + ocorrencia.toString() + "\n";
 		}
 		

@@ -39,6 +39,27 @@ public class LinhaDoTempo extends Propagador<Momento>{
 	
 	//ABSTRACT
 	
+	public String[][] toTable(){
+		ArrayList<String[]> listaDeOcorrencias = new ArrayList<String[]>();
+		
+		for(Momento momento : linhaDoTempo){
+			for(Ocorrencia ocorrencia : momento.listaDeOcorrencia){
+				
+				listaDeOcorrencias.add(
+					new String[]{
+						String.valueOf(momento.referenciaTemporal),
+						String.valueOf(ocorrencia.cliente.id),
+						String.valueOf(ocorrencia.evento),
+						ocorrencia.recurso.nome
+					}
+				);
+				
+			}	
+		}
+	
+		return listaDeOcorrencias.toArray(new String[][]{});
+	}
+	
 	public String toString(Recurso recurso){
 		String string= "";
 		
