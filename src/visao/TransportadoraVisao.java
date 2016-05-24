@@ -104,9 +104,9 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		String[] cabecalhoTabela = new String[]{"Tamanho atual", "Minimo", "Medio", "Maximo"};
 		Object[][] conteudoTabela = new Object[][]{{ 
 			dto.QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO,
-			dto.TAMANHO_MINIMO_FILA_CARREGAMENTO,
+			dto.TAMANHO_MINIMO_FILA_CARREGAMENTO == Integer.MAX_VALUE ? 0 : dto.TAMANHO_MINIMO_FILA_CARREGAMENTO,
 			dto.TAMANHO_MEDIO_FILA_CARREGAMENTO,
-			dto.TAMANHO_MAXIMO_FILA_CARREGAMENTO
+			dto.TAMANHO_MAXIMO_FILA_CARREGAMENTO == Integer.MIN_VALUE ? 0 : dto.TAMANHO_MAXIMO_FILA_CARREGAMENTO
 		}};
 		JScrollPane _jScrollPane = new JScrollPane(new JTable(conteudoTabela, cabecalhoTabela));
 		_jScrollPane.setPreferredSize(new Dimension(400, 50));
@@ -118,9 +118,9 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		_jPanel.add(new JLabel("Tempo da entidade na fila", JLabel.CENTER));
 		cabecalhoTabela = new String[]{"Minimo", "Medio", "Maximo"};
 		conteudoTabela = new Object[][]{{ 
-			dto.TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR,
+			dto.TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR == Integer.MAX_VALUE ? 0 : dto.TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR,
 			dto.TEMPO_MEDIO_ENTIDADE_FILA_CARREGADOR,
-			dto.TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR
+			dto.TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR == Integer.MIN_VALUE ? 0 : dto.TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR
 		}};
 		_jScrollPane = new JScrollPane(new JTable(conteudoTabela, cabecalhoTabela));
 		_jScrollPane.setPreferredSize(new Dimension(400, 50));
@@ -135,9 +135,9 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		cabecalhoTabela = new String[]{"Tamanho atual", "Minimo", "Medio", "Maximo"};
 		conteudoTabela = new Object[][]{{ 
 			dto.QUANTIDADE_CAMINHOES_FILA_PESAGEM,
-			dto.TAMANHO_MINIMO_FILA_PESAGEM,
+			dto.TAMANHO_MINIMO_FILA_PESAGEM == Integer.MAX_VALUE ? 0 : dto.TAMANHO_MINIMO_FILA_PESAGEM,
 			dto.TAMANHO_MEDIO_FILA_PESAGEM,
-			dto.TAMANHO_MAXIMO_FILA_PESAGEM
+			dto.TAMANHO_MAXIMO_FILA_PESAGEM == Integer.MIN_VALUE ? 0 : dto.TAMANHO_MAXIMO_FILA_PESAGEM
 		}};
 		_jScrollPane = new JScrollPane(new JTable(conteudoTabela, cabecalhoTabela));
 		_jScrollPane.setPreferredSize(new Dimension(400, 50));
@@ -149,9 +149,9 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		_jPanel.add(new JLabel("Tempo da entidade na fila", JLabel.CENTER));
 		cabecalhoTabela = new String[]{"Minimo", "Medio", "Maximo"};
 		conteudoTabela = new Object[][]{{ 
-			dto.TEMPO_MINIMO_ENTIDADE_FILA_PESAGEM,
+			dto.TEMPO_MINIMO_ENTIDADE_FILA_PESAGEM == Integer.MAX_VALUE ? 0 : dto.TEMPO_MINIMO_ENTIDADE_FILA_PESAGEM,
 			dto.TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM,
-			dto.TEMPO_MAXIMO_ENTIDADE_FILA_PESAGEM
+			dto.TEMPO_MAXIMO_ENTIDADE_FILA_PESAGEM == Integer.MIN_VALUE ? 0 : dto.TEMPO_MAXIMO_ENTIDADE_FILA_PESAGEM
 		}};
 		_jScrollPane = new JScrollPane(new JTable(conteudoTabela, cabecalhoTabela));
 		_jScrollPane.setPreferredSize(new Dimension(400, 50));
@@ -165,9 +165,9 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		_jPanel.add(new JLabel("Tempo do Ciclo", JLabel.CENTER));
 		cabecalhoTabela = new String[]{"Minimo", "Medio", "Maximo"};
 		conteudoTabela = new Object[][]{{ 
-			dto.TEMPO_MINIMO_CICLO,
+			dto.TEMPO_MINIMO_CICLO == Integer.MAX_VALUE ? 0 : dto.TEMPO_MINIMO_CICLO,
 			dto.TEMPO_MEDIO_CICLO,
-			dto.TEMPO_MAXIMO_CICLO
+			dto.TEMPO_MAXIMO_CICLO == Integer.MIN_VALUE ? 0 : dto.TEMPO_MAXIMO_CICLO
 		}};
 		_jScrollPane = new JScrollPane(new JTable(conteudoTabela, cabecalhoTabela));
 		_jScrollPane.setPreferredSize(new Dimension(400, 50));
