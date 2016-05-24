@@ -29,12 +29,16 @@ public class LinhaDoTempo extends Propagador<Momento>{
 	
 	public void registrar(Ocorrencia registro) {
 		if(linhaDoTempo.size() > 0){
-			linhaDoTempo.get(linhaDoTempo.size()-1).add(registro);
+			getPresente().add(registro);
 		}
 	}
 	
 	public ArrayList<Momento> getLinhaDoTempo(){
 		return this.linhaDoTempo;
+	}
+	
+	public Momento getPresente(){
+		return linhaDoTempo.get(linhaDoTempo.size()-1);
 	}
 	
 	//ABSTRACT
