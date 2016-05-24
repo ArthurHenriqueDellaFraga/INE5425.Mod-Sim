@@ -31,6 +31,9 @@ public class TransportadoraDTO{
 	public int TEMPO_MAXIMO_ENTIDADE_FILA_PESAGEM = 0;
 	public int TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM = 0;
 	
+	public int TEMPO_MINIMO_CICLO = 0;
+	public int TEMPO_MAXIMO_CICLO = 0;
+	public int TEMPO_MEDIO_CICLO = 0;
 	
 	public TransportadoraDTO(){ }
 
