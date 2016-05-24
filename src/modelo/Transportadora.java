@@ -2,9 +2,12 @@ package modelo;
 
 import java.util.ArrayList;
 
+import controle.TransportadoraControle;
+import padrao_de_projeto.Propagador;
 import primitivo.Momento;
 import primitivo.Ocorrencia;
 import primitivo.Ocorrencia.Evento;
+import visao.TransportadoraDTO;
 
 public class Transportadora extends Simulacao{
 	
@@ -35,11 +38,15 @@ public class Transportadora extends Simulacao{
 	private final int TEMPO_PESAGEM = 2;
 	private final int TEMPO_ENTREGA = 10;
 	
+	//ATRIBUTOS
+	public final TransportadoraPropagador propagador = new TransportadoraPropagador();
+	
 	private ArrayList<Recurso> percurso;
 	private ArrayList<Caminhao> frota;
 
 	public Transportadora(){
 		super();
+		new TransportadoraControle(this);
 		
 		this.percurso = new ArrayList<Recurso>();
 			Recurso carregamento = new Recurso("Carregador", QUANTIDADE_CARREGADOR){
@@ -78,15 +85,12 @@ public class Transportadora extends Simulacao{
 		}
 		
 		calcularNumeroEntidadesNaFila();
-		
-		for(Caminhao caminhao : frota){
-			System.out.println(linhaDoTempo.toString(caminhao) + "\n\n");
-		}
+
 	}
 	
 	public void calcularNumeroEntidadesNaFila(){
 		for(Momento momento : linhaDoTempo.getLinhaDoTempo()){
-			for(Ocorrencia ocorrencia : momento.getListaDeOcorrencia()){
+			for(Ocorrencia ocorrencia : momento.listaDeOcorrencia){
 				if(ocorrencia.recurso.nome.equals("Balança")){
 					if(ocorrencia.evento.name().equals(Evento.InicioDoAtendimento)){
 						QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO++;
@@ -135,5 +139,17 @@ public class Transportadora extends Simulacao{
 		}
 	}
 	
+	//SUBCLASSES
+	
+	public class TransportadoraPropagador extends Propagador<TransportadoraDTO>{
+		
+		public void propagar(){
+			propagar(
+				new TransportadoraDTO(
+						linhaDoTempo.toTable()
+				)
+			);
+		}
+	}
 	
 }
