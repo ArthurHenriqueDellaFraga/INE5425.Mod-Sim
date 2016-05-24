@@ -10,8 +10,7 @@ public class InterfaceDaAplicacao extends Comunicador{
 	private InterfaceDaAplicacao() {
 		FRAME_FAMILIAR = new JFrame("INE5425 - Modelagem e Simulacao");
 		FRAME_FAMILIAR.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		FRAME_FAMILIAR.setLocation(150, 150);
-		FRAME_FAMILIAR.setSize(500, 500);
+		FRAME_FAMILIAR.setSize(500, 800);
 	}
 
 	public static InterfaceDaAplicacao invocarInstancia() {

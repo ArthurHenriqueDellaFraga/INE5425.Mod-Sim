@@ -47,7 +47,7 @@ public class Transportadora extends Temporal{
 	private static int tempoFilaPesagem = 0;
 	
 	//TAMANHO DA FROTA
-	private final int TAMANHO_FROTA = 1;
+	private final int TAMANHO_FROTA = 2;
 	
 	//QUANTIDADE DE RECURSOS
 	private final int QUANTIDADE_CARREGADOR = 2;
@@ -70,12 +70,12 @@ public class Transportadora extends Temporal{
 		new TransportadoraControle(this);
 		
 		this.percurso = new ArrayList<Recurso>();
-			Recurso carregamento = new Recurso("Carregador", QUANTIDADE_CARREGADOR){
+			Recurso carregador = new Recurso("Carregador", QUANTIDADE_CARREGADOR){
 				public int tempoDeServico() {
 					return TEMPO_CARREGAMENTO;
 				}
 			};
-			Recurso pesagem = new Recurso("Balanca", QUANTIDADE_BALANCA) {
+			Recurso balanca = new Recurso("Balanca", QUANTIDADE_BALANCA) {
 				public int tempoDeServico() {
 					return TEMPO_PESAGEM;
 				}
@@ -87,9 +87,10 @@ public class Transportadora extends Temporal{
 				}
 			};
 		
-			this.percurso.add(carregamento);
-			this.percurso.add(pesagem);
+			this.percurso.add(carregador);
+			this.percurso.add(balanca);
 			this.percurso.add(entrega);
+			
 		
 		
 		this.frota = new ArrayList<Caminhao>();
