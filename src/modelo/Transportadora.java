@@ -42,10 +42,13 @@ public class Transportadora extends Temporal{
 	public static int TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM = 0;
 	
 	public static int TEMPO_MINIMO_CICLO = Integer.MAX_VALUE;
-	public static int TEMPO_MEDIO_CICLO = 0;
 	public static int TEMPO_MAXIMO_CICLO = Integer.MIN_VALUE;
+	public static int TEMPO_MEDIO_CICLO = 0;
 	
 	//AUXILIARES
+	private static ArrayList<Integer> filaCarregador = new ArrayList<Integer>();
+	private static ArrayList<Integer> filaPesagem = new ArrayList<Integer>();
+	
 	private static HashMap<Integer, Integer> inicioFilaCarregador = new HashMap<Integer, Integer>();
 	private static HashMap<Integer, Integer> inicioFilaPesagem = new HashMap<Integer, Integer>();
 	private static int tempoFilaCarregador = 0;
@@ -57,7 +60,7 @@ public class Transportadora extends Temporal{
 	private static HashMap<Integer, ArrayList<Integer>> listaDeCiclos = new HashMap<Integer, ArrayList<Integer>>();
  	
 	//TAMANHO DA FROTA
-	public static int NUMERO_DE_CAMINHOES = 3;
+	public static int NUMERO_DE_CAMINHOES = 7;
 	
 	//QUANTIDADE DE RECURSOS
 	public static int QUANTIDADE_CARREGADOR = 2;
@@ -117,20 +120,35 @@ public class Transportadora extends Temporal{
 			if(ocorrencia.recurso.nome.equals("Carregador")){
 				if(insereFilaCarregamento(ocorrencia, i)){
 					QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO++;
+					filaCarregador.add(ocorrencia.cliente.id);
 				}
 				else if(ocorrencia.evento.equals(Evento.InicioDoAtendimento)){
-					QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO--;
+					if(filaCarregador.contains(ocorrencia.cliente.id)){
+						int size = filaCarregador.size();
+						for(int j = 0; j < size; j++){
+							if(filaCarregador.get(j).equals(ocorrencia.cliente.id)){
+								QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO--;
+								filaCarregador.remove(j);
+								break;
+							}
+						}
+					}
 				}
 			}
 			else if (ocorrencia.recurso.nome.equals("Balanca")){
 				if(insereFilaPesagem(ocorrencia)){
 					QUANTIDADE_CAMINHOES_FILA_PESAGEM++;
+					filaPesagem.add(ocorrencia.cliente.id);
 				}
 				else if(ocorrencia.evento.equals(Evento.InicioDoAtendimento)){
-					for(int j = 0; j < momento.listaDeOcorrencia.size(); j++){
-						if(ocorrencia.cliente.equals(momento.listaDeOcorrencia.get(j).cliente) &&  
-								!momento.listaDeOcorrencia.get(j).evento.equals(Evento.Chegada)){
-							QUANTIDADE_CAMINHOES_FILA_PESAGEM--;
+					if(filaPesagem.contains(ocorrencia.cliente.id)){
+						int size = filaPesagem.size();
+						for(int j = 0; j < size; j++){
+							if(filaPesagem.get(j).equals(ocorrencia.cliente.id)){
+								QUANTIDADE_CAMINHOES_FILA_PESAGEM--;
+								filaPesagem.remove(j);
+								break;
+							}
 						}
 					}
 				}
@@ -159,9 +177,9 @@ public class Transportadora extends Temporal{
 		}
 		
 		int i = momento.referenciaTemporal;
-		if(i == 1){
-			TAMANHO_MEDIO_FILA_CARREGAMENTO = QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO;
-			TAMANHO_MEDIO_FILA_PESAGEM = QUANTIDADE_CAMINHOES_FILA_PESAGEM;
+		if(i == 0 || i == 1){
+			TAMANHO_MEDIO_FILA_CARREGAMENTO += QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO;
+			TAMANHO_MEDIO_FILA_PESAGEM += QUANTIDADE_CAMINHOES_FILA_PESAGEM;
 		}
 		else{
 			TAMANHO_MEDIO_FILA_CARREGAMENTO = ((TAMANHO_MEDIO_FILA_CARREGAMENTO * (i-1)) + QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO) / i;
@@ -183,8 +201,14 @@ public class Transportadora extends Temporal{
 			}
 		}
 		
-		TAXA_MEDIA_OCUPACAO_CARREGADOR = (TAXA_MEDIA_OCUPACAO_CARREGADOR + carregadorOcupado) / momento.referenciaTemporal;
-		TAXA_MEDIA_OCUPACAO_BALANCA = (TAXA_MEDIA_OCUPACAO_BALANCA + balancaOcupado) / momento.referenciaTemporal;
+		if(momento.referenciaTemporal > 0){
+			TAXA_MEDIA_OCUPACAO_CARREGADOR = (TAXA_MEDIA_OCUPACAO_CARREGADOR + carregadorOcupado) / momento.referenciaTemporal;
+			TAXA_MEDIA_OCUPACAO_BALANCA = (TAXA_MEDIA_OCUPACAO_BALANCA + balancaOcupado) / momento.referenciaTemporal;
+		}
+		else{
+			TAXA_MEDIA_OCUPACAO_CARREGADOR = (TAXA_MEDIA_OCUPACAO_CARREGADOR + carregadorOcupado);
+			TAXA_MEDIA_OCUPACAO_BALANCA = (TAXA_MEDIA_OCUPACAO_BALANCA + balancaOcupado);
+		}
 	}
 	
 	public void calcularTempoEntidadeFila(){
@@ -266,13 +290,15 @@ public class Transportadora extends Temporal{
 					inicioFilaPesagemCiclo.put(ocorrencia.cliente.id, momento.referenciaTemporal);
 				}
 				else if(ocorrencia.evento.equals(Evento.FimDoAtendimento)){
-					int tempoTotalFila = tempoCiclo.get(ocorrencia.cliente.id);
-					if(inicioFilaPesagemCiclo.get(ocorrencia.cliente.id) != null){
-						int tempoInicioFila = inicioFilaPesagemCiclo.get(ocorrencia.cliente.id);
-						tempoTotalFila += momento.referenciaTemporal - tempoInicioFila;
-						inicioFilaPesagemCiclo.remove(ocorrencia.cliente.id);
+					if(tempoCiclo.get(ocorrencia.cliente.id) != null){
+						int tempoTotalFila = tempoCiclo.get(ocorrencia.cliente.id);
+						if(inicioFilaPesagemCiclo.get(ocorrencia.cliente.id) != null){
+							int tempoInicioFila = inicioFilaPesagemCiclo.get(ocorrencia.cliente.id);
+							tempoTotalFila += momento.referenciaTemporal - tempoInicioFila;
+							inicioFilaPesagemCiclo.remove(ocorrencia.cliente.id);
+						}
+						tempoCiclo.put(ocorrencia.cliente.id, tempoTotalFila);
 					}
-					tempoCiclo.put(ocorrencia.cliente.id, tempoTotalFila);
 				}
 			}
 			else if(ocorrencia.recurso.nome.equals("Estrada")){
@@ -364,9 +390,6 @@ public class Transportadora extends Temporal{
 		calcularTempoEntidadeFila();
 		calcularTempoCiclo();
 		
-		System.out.println("Momento: " + momento.referenciaTemporal);
-		System.out.println();
-		
 		propagador.propagar();
 	}
 	
@@ -377,7 +400,7 @@ public class Transportadora extends Temporal{
 		public void propagar(){
 			TransportadoraDTO dto = new TransportadoraDTO();
 			
-			dto.referenciaTemporal = momento.referenciaTemporal;			
+			dto.referenciaTemporal = momento.referenciaTemporal;
 			dto.conteudoLinhaDoTempo = linhaDoTempo.toTable();
 			
 			dto.QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO = QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO;
@@ -406,12 +429,10 @@ public class Transportadora extends Temporal{
 			dto.TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM = TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM;
 			
 			dto.TEMPO_MINIMO_CICLO = TEMPO_MINIMO_CICLO;
-			dto.TEMPO_MEDIO_CICLO = TEMPO_MEDIO_CICLO;
 			dto.TEMPO_MAXIMO_CICLO = TEMPO_MAXIMO_CICLO;
-			
+			dto.TEMPO_MEDIO_CICLO = TEMPO_MEDIO_CICLO;
 			
 			propagar(dto);
-			
 		}
 	}
 	
