@@ -119,17 +119,12 @@ public class Transportadora extends Temporal{
 					QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO++;
 				}
 				else if(ocorrencia.evento.equals(Evento.InicioDoAtendimento)){
-					for(int j = 0; j < momento.listaDeOcorrencia.size(); j++){
-						if(ocorrencia.cliente.equals(momento.listaDeOcorrencia.get(j).cliente) &&  
-								!momento.listaDeOcorrencia.get(j).evento.equals(Evento.Chegada)){
-							QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO--;
-						}
-					}
+					QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO--;
 				}
 			}
 			else if (ocorrencia.recurso.nome.equals("Balanca")){
 				if(insereFilaPesagem(ocorrencia)){
-									QUANTIDADE_CAMINHOES_FILA_PESAGEM++;
+					QUANTIDADE_CAMINHOES_FILA_PESAGEM++;
 				}
 				else if(ocorrencia.evento.equals(Evento.InicioDoAtendimento)){
 					for(int j = 0; j < momento.listaDeOcorrencia.size(); j++){
