@@ -33,6 +33,10 @@ public class LinhaDoTempo extends Propagador<Momento>{
 		}
 	}
 	
+	public ArrayList<Momento> getLinhaDoTempo(){
+		return this.linhaDoTempo;
+	}
+	
 	//ABSTRACT
 	
 	public String toString(Recurso recurso){

@@ -11,6 +11,10 @@ public class Momento{
 	
 	private ArrayList<Ocorrencia> ListaDeOcorrencia = new ArrayList<Ocorrencia>();
 	
+	public ArrayList<Ocorrencia> getListaDeOcorrencia(){
+		return ListaDeOcorrencia;
+	}
+	
 	public Momento(){ }
 	
 	//FUNCOES

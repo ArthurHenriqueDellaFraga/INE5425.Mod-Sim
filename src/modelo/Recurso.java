@@ -24,6 +24,11 @@ public abstract class Recurso extends Temporal{
 		this.capacidade = capacidade;
 	}
 	
+	public boolean equals(String recurso){
+		
+		return false;
+	}
+	
 	//FUNCOES
 	
 	public void receber(Cliente cliente){

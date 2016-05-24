@@ -2,7 +2,26 @@ package modelo;
 
 import java.util.ArrayList;
 
+import primitivo.Momento;
+import primitivo.Ocorrencia;
+import primitivo.Ocorrencia.Evento;
+
 public class Transportadora extends Simulacao{
+	
+	//DADOS A SEREM APRESENTADOS
+	
+	public static int QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO = 0;
+	public static int TAMANHO_MINIMO_FILA_CARREGAMENTO = Integer.MAX_VALUE;
+	public static int TAMANHO_MAXIMO_FILA_CARREGAMENTO = Integer.MIN_VALUE;
+	public static int TAMANHO_MEDIO_FILA_CARREGAMENTO = 0;
+	
+	public static int QUANTIDADE_CAMINHOES_FILA_PESAGEM = 0;
+	public static int TAMANHO_MINIMO_FILA_PESAGEM = Integer.MIN_VALUE;
+	public static int TAMANHO_MAXIMO_FILA_PESAGEM = Integer.MIN_VALUE;
+	public static int TAMANHO_MEDIO_FILA_PESAGEM = 0;
+	
+	public static int QUANTIDADE_CAMINHOS_ENTREGANDO = 0;
+	
 	
 	//TAMANHO DA FROTA
 	private final int TAMANHO_FROTA = 2;
@@ -58,9 +77,51 @@ public class Transportadora extends Simulacao{
 			linhaDoTempo.prosseguir();
 		}
 		
+		calcularNumeroEntidadesNaFila();
+		
 		for(Caminhao caminhao : frota){
 			System.out.println(linhaDoTempo.toString(caminhao) + "\n\n");
 		}
+	}
+	
+	public void calcularNumeroEntidadesNaFila(){
+		for(Momento momento : linhaDoTempo.getLinhaDoTempo()){
+			for(Ocorrencia ocorrencia : momento.getListaDeOcorrencia()){
+				if(ocorrencia.recurso.nome.equals("Balança")){
+					if(ocorrencia.evento.name().equals(Evento.InicioDoAtendimento)){
+						QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO++;
+					}
+					else if(ocorrencia.evento.name().equals(Evento.FimDoAtendimento)){
+						QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO--;
+					}
+				}
+				else if (ocorrencia.recurso.nome.equals("Carregador")){
+					if(ocorrencia.evento.name().equals(Evento.InicioDoAtendimento)){
+						QUANTIDADE_CAMINHOES_FILA_PESAGEM++;
+					}
+					else if(ocorrencia.evento.name().equals(Evento.FimDoAtendimento)){
+						QUANTIDADE_CAMINHOES_FILA_PESAGEM--;
+					}
+				}
+				else{
+					if(ocorrencia.evento.name().equals(Evento.InicioDoAtendimento)){
+						QUANTIDADE_CAMINHOS_ENTREGANDO++;
+					}
+					else if(ocorrencia.evento.name().equals(Evento.FimDoAtendimento)){
+						QUANTIDADE_CAMINHOS_ENTREGANDO--;
+					}
+				}
+			}
+		}
+		QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO = 0;
+		TAMANHO_MINIMO_FILA_CARREGAMENTO = Integer.MAX_VALUE;
+		TAMANHO_MAXIMO_FILA_CARREGAMENTO = Integer.MIN_VALUE;
+		TAMANHO_MEDIO_FILA_CARREGAMENTO = 0;
+		
+		QUANTIDADE_CAMINHOES_FILA_PESAGEM = 0;
+		TAMANHO_MINIMO_FILA_PESAGEM = Integer.MIN_VALUE;
+		TAMANHO_MAXIMO_FILA_PESAGEM = Integer.MIN_VALUE;
+		TAMANHO_MEDIO_FILA_PESAGEM = 0;
 	}
 
 	//ABSTRACT
