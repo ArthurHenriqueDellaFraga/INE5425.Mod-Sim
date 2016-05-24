@@ -106,14 +106,21 @@ public class Transportadora extends Temporal{
 			Ocorrencia ocorrencia = momento.listaDeOcorrencia.get(i);
 			if(ocorrencia.recurso.nome.equals("Carregador")){
 				if(ocorrencia.evento.equals(Evento.Chegada)){
+					int numOcorrencias = 0;
 					for(int j = 0; j < momento.listaDeOcorrencia.size(); j++){
 						if(i != j){
 							Ocorrencia ocorrencia2 = momento.listaDeOcorrencia.get(j);
-								if(ocorrencia.cliente.equals(ocorrencia2.cliente) &&  
-										!ocorrencia2.evento.equals(Evento.InicioDoAtendimento)){
-									QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO++;
-								}
+							if(ocorrencia.cliente.equals(ocorrencia2.cliente)){
+								numOcorrencias++;
+							}
+							if(ocorrencia.cliente.equals(ocorrencia2.cliente) &&  
+									!ocorrencia2.evento.equals(Evento.InicioDoAtendimento)){
+								QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO++;
+							}
 						}	
+					}
+					if(numOcorrencias == 0){
+						QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO++;
 					}
 				}
 				else if(ocorrencia.evento.equals(Evento.InicioDoAtendimento)){
@@ -179,7 +186,7 @@ public class Transportadora extends Temporal{
 			TAMANHO_MEDIO_FILA_PESAGEM = ((TAMANHO_MEDIO_FILA_PESAGEM * (i-1)) + QUANTIDADE_CAMINHOES_FILA_PESAGEM) / i;
 		}
 	}
-	
+
 	public void calcularTaxaMediaOcupacaoRecursos(){
 		int carregadorOcupado = 0;
 		int balancaOcupado = 0;
@@ -203,15 +210,23 @@ public class Transportadora extends Temporal{
 			Ocorrencia ocorrencia = momento.listaDeOcorrencia.get(i);
 			if(ocorrencia.recurso.nome.equals("Carregador")){
 				if(ocorrencia.evento.equals(Evento.Chegada)){
+					int numOcorrencias = 0;
 					for(int j = 0; j < momento.listaDeOcorrencia.size(); j++){
 						if(i != j){
 							Ocorrencia ocorrencia2 = momento.listaDeOcorrencia.get(j);
-								if(ocorrencia.cliente.equals(ocorrencia2.cliente) &&  
-										!ocorrencia2.evento.equals(Evento.InicioDoAtendimento)){
-									inicioFilaCarregador.put(ocorrencia.cliente.id, momento.referenciaTemporal);
-									System.out.println("ADICIONOU O ELEMENTO: " + ocorrencia.cliente.id);
-								}	
+							if(ocorrencia.cliente.equals(ocorrencia2.cliente)){
+								numOcorrencias++;
+							}
+							if(ocorrencia.cliente.equals(ocorrencia2.cliente) &&  
+									!ocorrencia2.evento.equals(Evento.InicioDoAtendimento)){
+								inicioFilaCarregador.put(ocorrencia.cliente.id, momento.referenciaTemporal);
+								System.out.println("ADICIONOU ! O CLIENTE: " + ocorrencia.cliente.id);
+							}
 						}
+					}
+					if(numOcorrencias == 0){
+						inicioFilaCarregador.put(ocorrencia.cliente.id, momento.referenciaTemporal);
+						System.out.println("ADICIONOU O CLIENTE: " + ocorrencia.cliente.id);
 					}
 				}
 				else if(ocorrencia.evento.equals(Evento.InicioDoAtendimento)){
@@ -226,7 +241,6 @@ public class Transportadora extends Temporal{
 						}
 						tempoFilaCarregador += tempoTotalFila;
 						inicioFilaCarregador.remove(ocorrencia.cliente.id);
-						System.out.println("REMOVEU O ELEMENTO: " + ocorrencia.cliente.id);
 					}
 				}
 			}
