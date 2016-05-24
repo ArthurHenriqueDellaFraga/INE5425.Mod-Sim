@@ -47,16 +47,16 @@ public class Transportadora extends Temporal{
 	private static int tempoFilaPesagem = 0;
 	
 	//TAMANHO DA FROTA
-	private final int TAMANHO_FROTA = 7;
+	private final int NUMERO_DE_CAMINHOES = 7;
 	
 	//QUANTIDADE DE RECURSOS
-	private final int QUANTIDADE_CARREGADOR = 2;
-	private final int QUANTIDADE_BALANCA = 1;
+	public static int QUANTIDADE_CARREGADOR = 2;
+	public static int QUANTIDADE_BALANCA = 1;
 	
 	//TEMPO DE ESPERA
-	private final int TEMPO_CARREGAMENTO = 5;
-	private final int TEMPO_PESAGEM = 2;
-	private final int TEMPO_ENTREGA = 10;
+	public static int TEMPO_CARGA = 5;
+	public static int TEMPO_PESAGEM = 2;
+	public static int TEMPO_TRANSPORTE = 10;
 	
 	//ATRIBUTOS
 	public final TransportadoraPropagador propagador = new TransportadoraPropagador();
@@ -72,7 +72,7 @@ public class Transportadora extends Temporal{
 		this.percurso = new ArrayList<Recurso>();
 			Recurso carregador = new Recurso("Carregador", QUANTIDADE_CARREGADOR){
 				public int tempoDeServico() {
-					return TEMPO_CARREGAMENTO;
+					return TEMPO_CARGA;
 				}
 			};
 			Recurso balanca = new Recurso("Balanca", QUANTIDADE_BALANCA) {
@@ -83,7 +83,7 @@ public class Transportadora extends Temporal{
 			};
 			Recurso entrega = new Recurso("Estrada") {
 				public int tempoDeServico() {
-					return TEMPO_ENTREGA;
+					return TEMPO_TRANSPORTE;
 				}
 			};
 		
@@ -94,7 +94,7 @@ public class Transportadora extends Temporal{
 		
 		
 		this.frota = new ArrayList<Caminhao>();
-		for(int i = 0; i < TAMANHO_FROTA; i++){
+		for(int i = 0; i < NUMERO_DE_CAMINHOES; i++){
 			this.frota.add(new Caminhao(percurso));
 		}
 	}

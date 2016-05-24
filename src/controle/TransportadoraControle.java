@@ -17,10 +17,16 @@ public class TransportadoraControle {
 		transportadora.propagador.propagar();
 	}
 
-	public void prosseguir(int periodo) {
+	public void prosseguir(int periodo){
 		for(int i=0; i < periodo; i++){
 			linhaDoTempo.prosseguir();
 		}
+	}
+	
+	public void prosseguirProximoEvento(){
+		do{
+			linhaDoTempo.prosseguir();
+		}while(linhaDoTempo.getPresente().listaDeOcorrencia.isEmpty());
 	}
 	
 	//FUNCOES

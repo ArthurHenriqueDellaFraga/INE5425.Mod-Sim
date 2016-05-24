@@ -39,16 +39,18 @@ public abstract class Comunicador {
 	}
 	
 	public int coletarNumero(String mensagem, String titulo){
-		int retorno = 0;
+		int retorno = Integer.MIN_VALUE;
 		String string = "";
-		
-		try{
-			string = JOptionPane.showInputDialog(null, mensagem, titulo, JOptionPane.QUESTION_MESSAGE);
-			retorno = Integer.parseInt(string);
-		}
-		catch(NumberFormatException e){
-			apresentarMensagemDeErro("\"" + string + "\" não é um número", titulo);
-		}
+
+		do{
+			try{
+				string = JOptionPane.showInputDialog(null, mensagem, titulo, JOptionPane.QUESTION_MESSAGE);
+				retorno = Integer.parseInt(string);
+			}
+			catch(NumberFormatException e){
+				apresentarMensagemDeErro("\"" + string + "\" não é um número", titulo);
+			}
+		}while(retorno == Integer.MIN_VALUE);
 		
 		return retorno;
 	}

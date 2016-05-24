@@ -2,7 +2,6 @@ package controle;
 
 import excecao.OperacaoCanceladaException;
 import modelo.Transportadora;
-import primitivo.Momento;
 import visao.InterfaceDaAplicacao;
 
 public class GerenteDaAplicacao{
@@ -26,13 +25,17 @@ public class GerenteDaAplicacao{
 	//FUNCOES
 
 	public void iniciar(){
-		Transportadora transportadora =  new Transportadora();;
-		
 		try{
-			INTERFACE_DA_APLICACAO.iniciar();
+			switch (INTERFACE_DA_APLICACAO.iniciar()){
+				case 1:		INTERFACE_DA_APLICACAO.inicializacaoCustomizada(); break;
+				
+				default:
+			}
 		}
 		catch(OperacaoCanceladaException e){
 			System.exit(0);
 		}
+		
+		Transportadora transportadora =  new Transportadora();
 	}
 }
