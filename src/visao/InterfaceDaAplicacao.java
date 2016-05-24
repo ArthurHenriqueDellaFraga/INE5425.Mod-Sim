@@ -1,5 +1,8 @@
 package visao;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import javax.swing.JFrame;
 import modelo.Transportadora;
 
@@ -10,8 +13,13 @@ public class InterfaceDaAplicacao extends Comunicador{
 
 	private InterfaceDaAplicacao() {
 		FRAME_FAMILIAR = new JFrame("INE5425 - Modelagem e Simulacao");
+		
+		FRAME_FAMILIAR.setSize(500, 600);
 		FRAME_FAMILIAR.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		FRAME_FAMILIAR.setSize(500, 800);
+			Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+		    int x = (int) ((dimension.getWidth() - FRAME_FAMILIAR.getWidth()) / 2);
+		    int y = (int) ((dimension.getHeight() - FRAME_FAMILIAR.getHeight()) / 2);
+		FRAME_FAMILIAR.setLocation(x, y);
 	}
 
 	public static InterfaceDaAplicacao invocarInstancia() {

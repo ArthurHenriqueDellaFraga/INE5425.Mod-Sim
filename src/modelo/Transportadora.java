@@ -8,7 +8,6 @@ import java.util.Set;
 import controle.TransportadoraControle;
 import padrao_de_projeto.Propagador;
 import primitivo.LinhaDoTempo;
-import primitivo.Momento;
 import primitivo.Ocorrencia;
 import primitivo.Ocorrencia.Evento;
 import utils.Tuple;
@@ -381,12 +380,37 @@ public class Transportadora extends Temporal{
 	public class TransportadoraPropagador extends Propagador<TransportadoraDTO>{
 		
 		public void propagar(){
-			propagar(
-				new TransportadoraDTO(
-						momento.referenciaTemporal,
-						linhaDoTempo.toTable()
-				)
-			);
+			TransportadoraDTO dto = new TransportadoraDTO();
+			
+			dto.referenciaTemporal = momento.referenciaTemporal;
+			dto.conteudoLinhaDoTempo = linhaDoTempo.toTable();
+			
+			dto.QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO = QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO;
+			dto.TAMANHO_MINIMO_FILA_CARREGAMENTO = TAMANHO_MINIMO_FILA_CARREGAMENTO;
+			dto.TAMANHO_MAXIMO_FILA_CARREGAMENTO = TAMANHO_MAXIMO_FILA_CARREGAMENTO;
+			dto.TAMANHO_MEDIO_FILA_CARREGAMENTO = TAMANHO_MEDIO_FILA_CARREGAMENTO;
+			
+			dto.QUANTIDADE_CAMINHOES_FILA_PESAGEM = QUANTIDADE_CAMINHOES_FILA_PESAGEM;
+			dto.TAMANHO_MINIMO_FILA_PESAGEM = TAMANHO_MINIMO_FILA_PESAGEM;
+			dto.TAMANHO_MAXIMO_FILA_PESAGEM = TAMANHO_MAXIMO_FILA_PESAGEM;
+			dto.TAMANHO_MEDIO_FILA_PESAGEM = TAMANHO_MEDIO_FILA_PESAGEM;
+			
+			dto.QUANTIDADE_CAMINHOS_ENTREGANDO = QUANTIDADE_CAMINHOS_ENTREGANDO;
+			
+			dto.TAXA_MEDIA_OCUPACAO_CARREGADOR = TAXA_MEDIA_OCUPACAO_CARREGADOR;
+			dto.TAXA_MEDIA_OCUPACAO_BALANCA = TAXA_MEDIA_OCUPACAO_BALANCA;
+			
+			dto.CONTADOR_VIAGENS = CONTADOR_VIAGENS;
+			
+			dto.TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR = TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR;
+			dto.TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR = TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR;
+			dto.TEMPO_MEDIO_ENTIDADE_FILA_CARREGADOR = TEMPO_MEDIO_ENTIDADE_FILA_CARREGADOR;
+			
+			dto.TEMPO_MINIMO_ENTIDADE_FILA_PESAGEM = TEMPO_MINIMO_ENTIDADE_FILA_PESAGEM;
+			dto.TEMPO_MAXIMO_ENTIDADE_FILA_PESAGEM = TEMPO_MAXIMO_ENTIDADE_FILA_PESAGEM;
+			dto.TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM = TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM;
+			
+			propagar(dto);
 		}
 	}
 	
