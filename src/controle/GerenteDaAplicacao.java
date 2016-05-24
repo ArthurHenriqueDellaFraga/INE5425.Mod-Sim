@@ -34,7 +34,5 @@ public class GerenteDaAplicacao{
 		catch(OperacaoCanceladaException e){
 			System.exit(0);
 		}
-		
-		transportadora.simular();
 	}
 }

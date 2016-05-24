@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import modelo.Cliente;
 import modelo.Recurso;
-import modelo.Simulacao;
+import modelo.Transportadora;
 import padrao_de_projeto.Captador;
 import padrao_de_projeto.Propagador;
 
@@ -12,9 +12,9 @@ public class LinhaDoTempo extends Propagador<Momento>{
 	public static final Momento inicio = new Momento();
 	private ArrayList<Momento> linhaDoTempo = new ArrayList<Momento>();
 		
-	public LinhaDoTempo(Simulacao simulacao){
+	public LinhaDoTempo(Transportadora transportadora){
 		super();
-		inscrever((Captador<Momento>) simulacao);
+		inscrever((Captador<Momento>) transportadora);
 		linhaDoTempo.add(inicio);
 	}
 

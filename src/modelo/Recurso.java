@@ -11,9 +11,11 @@ public abstract class Recurso extends Temporal{
 	public final int id = quantidade++;
 	public final String nome;
 	
-	private int capacidade = 0;
+	private int capacidade = 0;	
 	private ArrayList<Cliente> filaDeEspera = new ArrayList<Cliente>();
 	private ArrayList<Servico> listaDeServicosEmAndamento = new ArrayList<Servico>();
+	
+	private ArrayList<Cliente> filaDeChegada = new ArrayList<Cliente>();
 	
 	public Recurso(String nome){
 		this.nome = nome;
@@ -31,16 +33,12 @@ public abstract class Recurso extends Temporal{
 	
 	//FUNCOES
 	
-	public void receber(Cliente cliente){
-		Ocorrencia o = new Ocorrencia(cliente, Evento.Chegada, Recurso.this);
-		registrar(o);
-		if(capacidade == 0 || listaDeServicosEmAndamento.size() < capacidade){
-			listaDeServicosEmAndamento.add(
-				new Servico(tempoDeServico(), cliente)
-			);
+	public void receber(Cliente cliente, int referenciaTemporal){
+		if(referenciaTemporal < momento.referenciaTemporal){
+			receber(cliente);
 		}
 		else{
-			filaDeEspera.add(cliente);
+			filaDeChegada.add(cliente);
 		}
 	}
 	
@@ -61,7 +59,24 @@ public abstract class Recurso extends Temporal{
 					);
 				}
 			}
-			
+		}
+		
+		for(Cliente cliente : filaDeChegada){
+			receber(cliente);
+		}
+		filaDeChegada.clear();
+	}
+	
+	private void receber(Cliente cliente){
+		Ocorrencia o = new Ocorrencia(cliente, Evento.Chegada, Recurso.this);
+		registrar(o);
+		if(capacidade == 0 || listaDeServicosEmAndamento.size() < capacidade){
+			listaDeServicosEmAndamento.add(
+				new Servico(tempoDeServico(), cliente)
+			);
+		}
+		else{
+			filaDeEspera.add(cliente);
 		}
 	}
 	

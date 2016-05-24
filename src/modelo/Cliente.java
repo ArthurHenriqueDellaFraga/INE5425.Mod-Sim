@@ -18,10 +18,10 @@ public abstract class Cliente extends Temporal{
 		
 		this.listaDeAtividades = listaDeAtividades;
 		this.atividadeCorrente = listaDeAtividades.iterator();
-		atividadeCorrente.next().receber(Cliente.this);
+		atividadeCorrente.next().receber(Cliente.this, momento.referenciaTemporal);
 	}
 
-	public void prosseguir() { }
+	public void prosseguir(){}
 	
 	public Captador<Ocorrencia> getAtencao(){
 		
@@ -33,7 +33,7 @@ public abstract class Cliente extends Temporal{
 						if(!atividadeCorrente.hasNext()){
 							Cliente.this.atividadeCorrente = listaDeAtividades.iterator();
 						}	
-						atividadeCorrente.next().receber(Cliente.this);	
+						atividadeCorrente.next().receber(Cliente.this, momento.referenciaTemporal);	
 						break;
 		
 					default: break;

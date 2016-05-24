@@ -1,6 +1,8 @@
 package visao;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -9,16 +11,37 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
+import controle.TransportadoraControle;
 import padrao_de_projeto.Captador;
 
 public class TransportadoraVisao extends JPanel implements Captador<TransportadoraDTO>{
-	private JLabel jLabel = new JLabel("Momento 0");
+	private final TransportadoraControle CONTROLE;
+	
+	private JLabel jLabel = new JLabel("");
 	private JPanel[] jPanel = new JPanel[]{ new JPanel(), new JPanel() };
-	private JButton[] jButton = new JButton[]{};
+	private JButton[] jButton = new JButton[]{
+			new JButton("Prosseguir"){{
+				addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e){					
+						CONTROLE.prosseguir(1);
+					}
+				});
+				setEnabled(true);
+			}},
+			new JButton("Prosseguir*"){{
+				addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e){					
+						CONTROLE.prosseguir(1);
+					}
+				});
+				setEnabled(false);
+			}},
+	};
 	
 	
-	public TransportadoraVisao(){
+	public TransportadoraVisao(TransportadoraControle controle){
 		super();
+		this.CONTROLE = controle;
 		
 		TransportadoraDTO dto = new TransportadoraDTO();
 		JTabbedPane jTabbedPane = new JTabbedPane();
@@ -30,6 +53,7 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		
 		this.add(jLabel);
 		this.add(jTabbedPane);
+		this.add(jButton[0]);
 		
 		InterfaceDaAplicacao.invocarInstancia().FRAME_FAMILIAR.add(this);
 		InterfaceDaAplicacao.invocarInstancia().FRAME_FAMILIAR.setVisible(true);

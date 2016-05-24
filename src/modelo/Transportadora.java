@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 import controle.TransportadoraControle;
 import padrao_de_projeto.Propagador;
+import primitivo.LinhaDoTempo;
 import primitivo.Momento;
 import primitivo.Ocorrencia;
 import primitivo.Ocorrencia.Evento;
 import visao.TransportadoraDTO;
 
-public class Transportadora extends Simulacao{
+public class Transportadora extends Temporal{
 	
 	//DADOS A SEREM APRESENTADOS
 	public static int QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO = 0;
@@ -26,7 +27,7 @@ public class Transportadora extends Simulacao{
 	
 	
 	//TAMANHO DA FROTA
-	private final int TAMANHO_FROTA = 7;
+	private final int TAMANHO_FROTA = 1;
 	
 	//QUANTIDADE DE RECURSOS
 	private final int QUANTIDADE_CARREGADOR = 2;
@@ -39,6 +40,7 @@ public class Transportadora extends Simulacao{
 	
 	//ATRIBUTOS
 	public final TransportadoraPropagador propagador = new TransportadoraPropagador();
+	public final LinhaDoTempo linhaDoTempo = new LinhaDoTempo(this);
 	
 	private ArrayList<Recurso> percurso;
 	private ArrayList<Caminhao> frota;
@@ -53,7 +55,7 @@ public class Transportadora extends Simulacao{
 					return TEMPO_CARREGAMENTO;
 				}
 			};
-			Recurso pesagem = new Recurso("Balança", QUANTIDADE_BALANCA) {
+			Recurso pesagem = new Recurso("Balanca", QUANTIDADE_BALANCA) {
 				public int tempoDeServico() {
 					return TEMPO_PESAGEM;
 				}
@@ -77,25 +79,6 @@ public class Transportadora extends Simulacao{
 	}
 	
 	//FUNCOES
-	
-	public void simular() {
-		for(int i = 1; i < 10; i++){
-			linhaDoTempo.prosseguir();
-			
-			calcularNumeroEntidadesNaFila(linhaDoTempo.getLinhaDoTempo().get(i-1));
-			if(i == 1){
-				TAMANHO_MEDIO_FILA_CARREGAMENTO = QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO;
-				TAMANHO_MEDIO_FILA_PESAGEM = QUANTIDADE_CAMINHOES_FILA_PESAGEM;
-			}
-			else{
-				TAMANHO_MEDIO_FILA_CARREGAMENTO = ((TAMANHO_MEDIO_FILA_CARREGAMENTO * (i-1)) + QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO) / i;
-				TAMANHO_MEDIO_FILA_PESAGEM = ((TAMANHO_MEDIO_FILA_PESAGEM * (i-1)) + QUANTIDADE_CAMINHOES_FILA_PESAGEM) / i;
-			}
-		}
-
-		propagador.propagar();
-		
-	}
 	
 	public void calcularNumeroEntidadesNaFila(Momento momento){
 		for(int i = 0; i < momento.listaDeOcorrencia.size(); i++){
@@ -169,6 +152,19 @@ public class Transportadora extends Simulacao{
 		for(Caminhao caminhao : frota){
 			caminhao.captar(momento);
 		}
+		
+		calcularNumeroEntidadesNaFila(momento);
+		int i = momento.referenciaTemporal;
+		if(i == 1){
+			TAMANHO_MEDIO_FILA_CARREGAMENTO = QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO;
+			TAMANHO_MEDIO_FILA_PESAGEM = QUANTIDADE_CAMINHOES_FILA_PESAGEM;
+		}
+		else{
+			TAMANHO_MEDIO_FILA_CARREGAMENTO = ((TAMANHO_MEDIO_FILA_CARREGAMENTO * (i-1)) + QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO) / i;
+			TAMANHO_MEDIO_FILA_PESAGEM = ((TAMANHO_MEDIO_FILA_PESAGEM * (i-1)) + QUANTIDADE_CAMINHOES_FILA_PESAGEM) / i;
+		}
+		
+		propagador.propagar();
 	}
 	
 	//SUBCLASSES
@@ -178,7 +174,7 @@ public class Transportadora extends Simulacao{
 		public void propagar(){
 			propagar(
 				new TransportadoraDTO(
-						linhaDoTempo.getPresente().referenciaTemporal,
+						momento.referenciaTemporal,
 						linhaDoTempo.toTable()
 				)
 			);

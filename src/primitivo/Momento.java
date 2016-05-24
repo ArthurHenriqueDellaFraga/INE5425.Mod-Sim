@@ -6,7 +6,7 @@ import modelo.Cliente;
 import modelo.Recurso;
 
 public class Momento{
-	public static int numInstancias = 0;
+	public static int numInstancias = -1;
 	public int referenciaTemporal = numInstancias++;
 	
 	public final ArrayList<Ocorrencia> listaDeOcorrencia = new ArrayList<Ocorrencia>();
