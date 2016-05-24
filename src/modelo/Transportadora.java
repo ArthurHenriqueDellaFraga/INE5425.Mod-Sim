@@ -44,6 +44,7 @@ public class Transportadora extends Temporal{
 	private static HashMap<Integer, Integer> inicioFilaCarregador = new HashMap<Integer, Integer>();
 	private static HashMap<Integer, Integer> inicioFilaPesagem = new HashMap<Integer, Integer>();
 	private static int tempoFilaCarregador = 0;
+	private static int tempoFilaPesagem = 0;
 	
 	//TAMANHO DA FROTA
 	private final int TAMANHO_FROTA = 1;
@@ -225,28 +226,28 @@ public class Transportadora extends Temporal{
 					}
 				}
 				else if(ocorrencia.evento.equals(Evento.FimDoAtendimento)){
-					int tempoInicioFila = inicioFilaCarregador.get(ocorrencia.cliente.id);
+					int tempoInicioFila = inicioFilaPesagem.get(ocorrencia.cliente.id);
 					int tempoTotalFila = momento.referenciaTemporal - tempoInicioFila;
-					if(tempoTotalFila > TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR){
-						TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR = tempoTotalFila;
+					if(tempoTotalFila > TEMPO_MAXIMO_ENTIDADE_FILA_PESAGEM){
+						TEMPO_MAXIMO_ENTIDADE_FILA_PESAGEM = tempoTotalFila;
 					}
-					else if(tempoTotalFila < TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR){
-						TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR = tempoTotalFila;
+					else if(tempoTotalFila < TEMPO_MINIMO_ENTIDADE_FILA_PESAGEM){
+						TEMPO_MINIMO_ENTIDADE_FILA_PESAGEM = tempoTotalFila;
 					}
-					tempoFilaCarregador += tempoTotalFila;
-					inicioFilaCarregador.remove(ocorrencia.cliente.id);
+					tempoFilaPesagem += tempoTotalFila;
+					inicioFilaPesagem.remove(ocorrencia.cliente.id);
 				}
 			}
 		}
 		
 		int i = momento.referenciaTemporal;
-		if(i == 1){
-			TAMANHO_MEDIO_FILA_CARREGAMENTO = QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO;
-			TAMANHO_MEDIO_FILA_PESAGEM = QUANTIDADE_CAMINHOES_FILA_PESAGEM;
+		if(i == 0 || i == 1){
+			TEMPO_MEDIO_ENTIDADE_FILA_CARREGADOR += tempoFilaCarregador;
+			TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM += tempoFilaPesagem;
 		}
 		else{
-			TAMANHO_MEDIO_FILA_CARREGAMENTO = ((TAMANHO_MEDIO_FILA_CARREGAMENTO * (i-1)) + QUANTIDADE_CAMINHOES_FILA_CARREGAMENTO) / i;
-			TAMANHO_MEDIO_FILA_PESAGEM = ((TAMANHO_MEDIO_FILA_PESAGEM * (i-1)) + QUANTIDADE_CAMINHOES_FILA_PESAGEM) / i;
+			TEMPO_MEDIO_ENTIDADE_FILA_CARREGADOR = ((TEMPO_MEDIO_ENTIDADE_FILA_CARREGADOR * (i-1)) + tempoFilaCarregador) / i;
+			TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM = ((TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM * (i-1)) + tempoFilaPesagem) / i;
 		}
 	}
 
@@ -263,6 +264,15 @@ public class Transportadora extends Temporal{
 		calcularNumeroEntidadesNaFila();
 		calcularTaxaMediaOcupacaoRecursos();
 		calcularTempoEntidadeFila();
+		
+		System.out.println("Momento: " + momento.referenciaTemporal);
+		System.out.println("Tempo máximo na fila: " + TEMPO_MAXIMO_ENTIDADE_FILA_CARREGADOR);
+		System.out.println("Tempo minimo na fila: " + TEMPO_MINIMO_ENTIDADE_FILA_CARREGADOR);
+		System.out.println("Tempo medio na fila: " + TEMPO_MEDIO_ENTIDADE_FILA_CARREGADOR);
+		
+		System.out.println("Tempo máximo na fila: " + TEMPO_MAXIMO_ENTIDADE_FILA_PESAGEM);
+		System.out.println("Tempo minimo na fila: " + TEMPO_MINIMO_ENTIDADE_FILA_PESAGEM);
+		System.out.println("Tempo medio na fila: " + TEMPO_MEDIO_ENTIDADE_FILA_PESAGEM);
 		
 		propagador.propagar();
 	}
