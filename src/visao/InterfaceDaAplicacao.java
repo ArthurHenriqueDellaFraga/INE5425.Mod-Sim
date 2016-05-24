@@ -34,7 +34,7 @@ public class InterfaceDaAplicacao extends Comunicador{
 				+ "\n\n" + "Arthur Henrique Della Fraga \t 11200623"
 				+ "\n" + "Felipe Calistro Chaiben \t 11200632";
 		
-		return apresentarDialogoOpitativo(mensagemInicializacao, "TRABALHO 1 - TRANSPORTADORA", new String[]{"Inicialização padrao", "Inicialização customizada"});
+		return apresentarDialogoOpitativo(mensagemInicializacao, "TRABALHO 1 - TRANSPORTADORA", new String[]{"Inicializacao padrao", "Inicializacao customizada"});
 	}
 	
 	public void inicializacaoCustomizada(){

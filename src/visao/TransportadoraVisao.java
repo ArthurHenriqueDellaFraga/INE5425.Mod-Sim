@@ -35,7 +35,7 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 					}
 				});
 			}},
-			new JButton("Prosseguir até o próximo evento"){{
+			new JButton("Prosseguir ate o proximo evento"){{
 				addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e){
 						CONTROLE.prosseguirProximoEvento();
@@ -182,7 +182,7 @@ public class TransportadoraVisao extends JPanel implements Captador<Transportado
 		jPanel[1].add(jTabbedPane);
 		
 		_jPanel = new JPanel(new GridLayout(2, 0));
-		_jPanel.add(new JLabel(dto.CONTADOR_VIAGENS + " entregas realzadas", JLabel.CENTER));
+		_jPanel.add(new JLabel(dto.CONTADOR_VIAGENS + " entregas realizadas", JLabel.CENTER));
 		_jPanel.add(new JLabel(dto.QUANTIDADE_CAMINHOS_ENTREGANDO + " caminhoes em percurso", JLabel.CENTER));
 		jPanel[1].add(_jPanel);
 
